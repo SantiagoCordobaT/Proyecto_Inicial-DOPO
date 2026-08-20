@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Clase principal de la maquina tragamonedas.
@@ -15,23 +15,41 @@ public class SlotMachine
     private Rectangle background;
 
     /**
-     * Constructor for objects of class SlotMachine
+     * Constructor for objects of class SlotMachine.
      */
     public SlotMachine()
     {
-        // initialise instance variable
-        
+        this.wheels = new ArrayList<>();
+        this.allowedSymbols = new ArrayList<>();
+        this.isOk = true;
+        this.isVisible = false;
+        this.background = new Rectangle();
+        background.changeColor("black");
+        background.moveHorizontal(50);
+        background.moveVertical(50);
+        background.changeSize(300, 200);
     }
 
     /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * Make's the background machine visible in the computer.
      */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return y;
+    public void makeVisible(){
+        background.makeVisible();
+        this.isVisible = true;
+    }
+    
+    /**
+     * Make's the background machine invisible in the computer.
+     */
+    public void makeInvisible(){
+        background.makeInvisible();
+        this.isVisible = false;
+    }
+    
+    /**
+     * @return true if the last operation was successful, false if not.
+     */
+    public boolean ok(){
+        return isOk;
     }
 }

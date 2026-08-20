@@ -1,14 +1,13 @@
 
 /**
- * Write a description of class Wheel here.
+ * Wheels of the slotMachine.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Santiago Cordoba - Camilo Rivas
+ * @version 1
  */
 public class Wheel
 {
     // instance variables - replace the example below with your own
-    private int x;
 
     /**
      * Constructor for objects of class Wheel
@@ -16,18 +15,13 @@ public class Wheel
     public Wheel()
     {
         // initialise instance variables
-        x = 0;
     }
-
+    
     /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * Method that permits to turn the wheel and try again slotMachine
      */
-    public int sampleMethod(int y)
+    public void turnAround()
     {
-        // put your code here
-        return x + y;
+        //wheel functionalities
     }
 }
