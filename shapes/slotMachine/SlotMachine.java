@@ -52,4 +52,22 @@ public class SlotMachine
     public boolean ok(){
         return isOk;
     }
+    
+    /**
+     * Add une wheel
+     */
+    public void addWheel (int pos){
+        if (pos < 1) {
+            pos = 1;
+        }
+        
+        if (pos > wheels.size() + 1) {
+            pos = wheels.size() + 1;
+        }
+        
+        Wheel nuevaRueda = new Wheel();
+        
+        wheels.add(pos - 1, nuevaRueda);
+        isOk = true; 
+    }
 }
