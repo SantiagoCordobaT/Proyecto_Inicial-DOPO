@@ -54,20 +54,42 @@ public class SlotMachine
     }
     
     /**
-     * Add une wheel
+     * Add wheel
      */
     public void addWheel (int pos){
+        //Al momento de registar una posicion negativa, lo corrige y lo toma como una 
+        //posicion correcta.
         if (pos < 1) {
             pos = 1;
         }
-        
+        //Esto funciona como una ArrayList, donde si se quiere meter una nueva rueda, puede 
+        //agrandar el tamaño de limite superior.
         if (pos > wheels.size() + 1) {
             pos = wheels.size() + 1;
         }
-        
+        //Crea una nueva rueda (objeto).
         Wheel nuevaRueda = new Wheel();
-        
+        //añade a la ArrayList en la posicion 1 y no 0 por (pos - 1).
         wheels.add(pos - 1, nuevaRueda);
+        //Actualiza el estado de la operacion, donde infroma que si se pudo hacer el cambio. 
         isOk = true; 
+    }
+    
+    /**
+     * delete wheel
+     */
+    public void delwheel (int pos){
+        //Al momento de registar una posicion negativa, lo corrige y lo toma como una 
+        //posicion correcta.
+        if (pos < 1){
+            pos = 1;
+        }
+        //Esto funciona como una ArrayList, donde utiliza el limite superior
+        if (pos > wheels.size()){
+            pos = wheels.size();
+        }
+        //Elimina el objeto utilizando la posicion del usuario.   
+        wheels.remove(pos - 1);
+        isOk = true;
     }
 }
