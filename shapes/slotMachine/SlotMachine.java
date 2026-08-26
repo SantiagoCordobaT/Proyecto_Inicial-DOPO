@@ -47,6 +47,41 @@ public class SlotMachine
     }
     
     /**
+     * Add wheels with their background in slotMachine.
+     */
+    public void addWheel(int pos){
+        if (pos < 1){
+            pos = 1;
+        }
+        if (pos > wheels.size()+1){
+            pos = wheels.size()+1;
+        }
+        Wheel otherWheel = new Wheel();
+        wheels.add(pos - 1, otherWheel);
+        this.isOk = true;
+    }
+    
+    /**
+     * Delets a wheel with a background who is attach. 
+     */
+    public void delWheel(int pos){
+        if (wheels.isEmpty()){
+            this.isOk = false;
+            return;
+        }
+        
+        if (pos < 1){
+            pos = 1;
+        }
+        
+        if (pos > wheels.size()){
+            pos = wheels.size();
+        }
+        wheels.remove(pos - 1);
+        this.isOk = true;
+    }
+    
+    /**
      * @return true if the last operation was successful, false if not.
      */
     public boolean ok(){
