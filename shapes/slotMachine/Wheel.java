@@ -1,4 +1,5 @@
 import java.util.*;
+
 /**
  * Wheels of the slotMachine.
  *
@@ -12,9 +13,14 @@ public class Wheel
     private boolean isVisible;
     private Circle background;
     private int currentColor;
+    private ArrayList<String> symbols;
+    private int currentVisibleIndex;
+    private Rectangle body;
+    private boolean isVisible;
+>>>>>>> Stashed changes
     
     /**
-     * Constructor for objects of class Wheel
+     * Constructor for Wheel
      */
     public Wheel()
     {
@@ -25,6 +31,30 @@ public class Wheel
         currentColor = 0;
         
         
+=======
+        this.symbols = new ArrayList<>();
+        this.currentVisibleIndex = 0;
+        isVisible = false;
+        this.body = new Rectangle();
+        body.changeColor("magenta");
+        body.changeSize(200, 50);
+    }
+    
+    /**
+     * Make's invisible the body (Three rectangles what represents the background of each wheel).
+     */
+    public void makeInvisible(){
+        body.makeInvisible();
+        this.isVisible = false;
+    }
+    
+    /**
+     * Make's visible the body (Three rectangles what represents the background of each wheel).
+     */
+    public void makeVisible(){
+        body.makeVisible();
+        this.isVisible = true;
+>>>>>>> Stashed changes
     }
     
     /**
