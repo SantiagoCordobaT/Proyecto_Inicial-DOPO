@@ -1,10 +1,12 @@
 import java.util.*;
 
 /**
- * Wheels of the slot machine simulator.
+ * Represents a single spinning wheel within the slot machine simulator.
+ * It manages its own collection of symbols, tracks which one is currently visible, 
+ * and handles its own graphical representation on the screen.
  *
  * @author Santiago Cordoba - Camilo Rivas
- * @version 1.1
+ * @version 1.0
  */
 public class Wheel
 {
@@ -15,16 +17,18 @@ public class Wheel
     private boolean isVisible;
     
     /**
-     * Constructor for objects of class Wheel.
+     * Creates a new, empty wheel. 
      */
     public Wheel()
     {
         this.symbols = new ArrayList<>();
         this.currentVisibleIndex = 0;
         this.isVisible = false;
+        
         this.body = new Rectangle();
         this.body.changeColor("magenta");
         this.body.changeSize(200, 50);
+        
         this.symbolShape = new Circle();
         this.symbolShape.changeSize(30);
         this.symbolShape.moveHorizontal(50);
@@ -32,7 +36,7 @@ public class Wheel
     }
     
     /**
-     * Makes the wheel casing and its current symbol visible.
+     * Displays the wheel and active symbol on the screen.
      */
     public void makeVisible(){
         this.body.makeVisible();
@@ -45,7 +49,7 @@ public class Wheel
     }
     
     /**
-     * Hides the wheel and its symbol from the screen.
+     * Hides the wheel and active symbol from the screen.
      */
     public void makeInvisible(){
         this.body.makeInvisible();
@@ -54,7 +58,9 @@ public class Wheel
     }
     
     /**
-     * Mueve visualmente la rueda y su símbolo horizontalmente al mismo tiempo.
+     * Moves both the wheel's casing and its symbol horizontally across the screen.
+     * 
+     * @param distance The exact number of pixels to move the wheel horizontally.
      */
     public void moveHorizontal(int distance) {
         this.body.moveHorizontal(distance);
@@ -62,7 +68,9 @@ public class Wheel
     }
     
     /**
-     * Mueve visualmente la rueda y su símbolo verticalmente al mismo tiempo.
+     * Moves both the wheel's casing and its symbol vertically across the screen.
+     * 
+     * @param distance The exact number of pixels to move the wheel vertically.
      */
     public void moveVertical(int distance) {
         this.body.moveVertical(distance);
@@ -70,9 +78,10 @@ public class Wheel
     }
     
     /**
-     * Places a new symbol on the wheel and prepares it for visual representation.
+     * Adds a new symbol color to the wheel's sequence. 
+     * If it is the first symbol being added, it automatically displays it on the wheel.
      * 
-     * @param color The color of the symbol being placed.
+     * @param color The exact name of the color to register as a symbol.
      */
     public void place(String color) {
         this.symbols.add(color);
@@ -86,8 +95,8 @@ public class Wheel
     }
     
     /**
-     * Gira la rueda para mostrar el siguiente simbolo.
-     * Si llega al final de la lista, vuelve a empezar desde el principio.
+     * Spins the wheel to reveal the next symbol in the sequence.
+     * If the wheel reaches the end of its symbol list, it seamlessly loops back to the beginning.
      */
     public void spin() {
         if (symbols.size() > 1) {
@@ -97,22 +106,24 @@ public class Wheel
                 currentVisibleIndex = 0;
             }
             
-            String nuevoColor = symbols.get(currentVisibleIndex);
-            symbolShape.changeColor(nuevoColor);
+            String newColor = symbols.get(currentVisibleIndex);
+            symbolShape.changeColor(newColor);
         }
     }
     
     /**
-     * Returns the list of symbols currently configured in this wheel.
-     * @return An ArrayList containing the color strings.
+     * Retrieves the complete sequence of symbols configured on this specific wheel.
+     * 
+     * @return An ArrayList containing the color strings of the symbols.
      */
     public ArrayList<String> getSymbols() {
         return this.symbols;
     }
     
     /**
-     * Returns the currently visible symbol on this wheel.
-     * @return The color string of the visible symbol, or null if empty.
+     * Identifies which symbol is currently being displayed on the wheel.
+     * 
+     * @return The color string of the visible symbol, or null if the wheel is empty.
      */
     public String getVisibleSymbol() {
         if (symbols.isEmpty()) {
