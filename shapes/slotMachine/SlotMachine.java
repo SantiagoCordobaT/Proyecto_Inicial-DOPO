@@ -1,8 +1,8 @@
 import java.util.*;
 
 /**
- * Main class for the Slot Machine simulator.
- * Manages the wheels, authorized symbols, and the general state of the machine.
+ * Main controller for the Slot Machine simulator.
+ * This class handles the core logic, managing the wheels, the authorized symbols, and the overall visual state of the game.
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 1.0
@@ -16,8 +16,8 @@ public class SlotMachine
     private Rectangle background;
 
     /**
-     * Constructor for objects of class SlotMachine.
-     * Initializes the empty lists and sets up the machine's visual background.
+     * Constructs a new Slot Machine.
+     * Initializes the empty collections and sets up the default visual background.
      */
     public SlotMachine()
     {
@@ -25,6 +25,7 @@ public class SlotMachine
         this.allowedSymbols = new ArrayList<>();
         this.isOk = true;
         this.isVisible = false;
+        
         this.background = new Rectangle();
         this.background.changeColor("black");
         this.background.moveHorizontal(50);
@@ -33,7 +34,7 @@ public class SlotMachine
     }
 
     /**
-     * Makes the slot machine and all its active components visible on the screen.
+     * Displays the slot machine and all its components on the screen.
      */
     public void makeVisible(){
         background.makeVisible();
@@ -49,10 +50,10 @@ public class SlotMachine
     }
     
     /**
-     * Adds a new wheel to the slot machine at the specified position.
-     * It also calculates the proper spatial coordinates to align the wheel inside the machine.
+     * Adds a new wheel to the machine at the position (pos).
+     * It also calculates the appropriate spatial coordinates to ensure the wheel is perfectly aligned within the machine's casing.
      * 
-     * @param pos The position where the wheel will be inserted (starting from 1).
+     * @param pos The position where the wheel should be inserted, starting from 1.
      */
     public void addWheel(int pos){
         if (pos < 1){
@@ -65,7 +66,7 @@ public class SlotMachine
         
         Wheel newWheel = new Wheel(); 
         newWheel.moveVertical(50);
-        int displacementX = 60 + ((pos - 1) * 60); 
+        int displacementX = 60 + ((pos - 1) * 60);
         newWheel.moveHorizontal(displacementX);
         wheels.add(pos - 1, newWheel);
         
@@ -77,9 +78,9 @@ public class SlotMachine
     }
     
     /**
-     * Deletes a wheel from the slot machine at the specified position.
+     * Removes a wheel from the machine.
      * 
-     * @param pos The position of the wheel to be removed (starting from 1).
+     * @param pos The position of the wheel to remove, from 1.
      */
     public void delWheel(int pos){
         if (wheels.isEmpty()){
@@ -94,15 +95,16 @@ public class SlotMachine
         if (pos > wheels.size()){
             pos = wheels.size();
         }
+        
         wheels.remove(pos - 1);
         this.isOk = true;
     }
     
     /**
-     * Adds a new authorized symbol (color) to the machine's configuration.
+     * Registers a new authorized symbol color into the machine's system.
      * 
-     * @param pos The position where the symbol will be registered (starting from 1).
-     * @param color The color of the symbol to be added.
+     * @param pos The position in the registry where the symbol will be saved, starting from 1.
+     * @param color The specific color name of the symbol.
      */
     public void addSymbol(int pos, String color){
         if (pos < 1){
@@ -118,9 +120,9 @@ public class SlotMachine
     }
     
     /**
-     * Deletes a registered symbol by its color name.
+     * Deletes a registered symbol from the machine's system using its color name.
      * 
-     * @param symbol The exact color name of the symbol to be removed.
+     * @param symbol The exact color name of the symbol to delete.
      */
     public void delSymbol(String symbol){
         boolean wasDeleted = allowedSymbols.remove(symbol);
@@ -133,11 +135,10 @@ public class SlotMachine
     }
     
     /**
-     * Places a specific authorized symbol onto a specific wheel.
-     * Delegates the actual placement and drawing action to the targeted Wheel object.
+     * Places a specific authorized symbol in the wheel.
      * 
-     * @param wheel The position of the target wheel (starting from 1).
-     * @param symbol The color of the symbol to place on the wheel.
+     * @param wheel The position of the target wheel, starting from 1.
+     * @param symbol The color of the symbol to place.
      */
     public void placeSymbol(int wheel, String symbol){
         if (wheels.isEmpty()){
@@ -148,6 +149,7 @@ public class SlotMachine
         if (wheel < 1){
             wheel = 1;
         }
+        
         if (wheel > wheels.size()){
             wheel = wheels.size();
         }
@@ -164,9 +166,9 @@ public class SlotMachine
     }
     
     /**
-     * Spins a specific wheel indicated by its position.
+     * Triggers a spin on a single, specific wheel.
      * 
-     * @param wheel The position of the wheel to spin (starting from 1).
+     * @param wheel The position of the wheel to spin, starting from 1.
      */
     public void spin(int wheel){
         if (wheels.isEmpty()){
@@ -177,6 +179,7 @@ public class SlotMachine
         if (wheel < 1){
             wheel = 1;
         }
+        
         if (wheel > wheels.size()){
             wheel = wheels.size();
         }
@@ -189,7 +192,7 @@ public class SlotMachine
     }
     
     /**
-     * Spins all the wheels present in the slot machine simultaneously.
+     * Triggers a simultaneous spin on all the wheels currently installed in the machine.
      */
     public void spin(){
         if (wheels.isEmpty()){
@@ -205,9 +208,9 @@ public class SlotMachine
     }
     
     /**
-     * Returns an array with the names of the colors installed in the first wheel.
+     * Retrieves the colors of all symbols currently configured on the first wheel.
      * 
-     * @return A String array containing the symbols of the first wheel.
+     * @return An array of strings representing the colors on the first wheel.
      */
     public String[] symbols() {
         if (wheels.isEmpty()) {
@@ -221,10 +224,9 @@ public class SlotMachine
     }
     
     /**
-     * Returns the number of distinct symbols (colors) currently installed 
-     * across all wheels in the slot machine.
+     * Calculates the total amount of unique symbol colors installed across every wheel.
      * 
-     * @return The count of unique symbols.
+     * @return The exact count of unique symbols.
      */
     public int distinctSymbols() {
         HashSet<String> uniqueSymbols = new HashSet<>();
@@ -238,10 +240,9 @@ public class SlotMachine
     }
     
     /**
-     * Returns the current configuration of the machine, which is the array of 
-     * symbols currently visible on each wheel from left to right.
+     * Gathers the current visual state of the machine by checking which symbol is displayed on each wheel from left to right.
      * 
-     * @return A String array with the visible symbols.
+     * @return An array containing the colors of the currently visible symbols.
      */
     public String[] configuration() {
         String[] config = new String[wheels.size()];
@@ -254,64 +255,57 @@ public class SlotMachine
     }
     
     /**
-     * Checks if the current machine configuration is a winning jackpot.
-     * A jackpot occurs when all currently visible symbols on the wheels are identical.
-     * It also triggers a visual celebration by changing the machine's background color.
+     * Evaluates the current configuration to determine if the player has won the jackpot.
+     * A jackpot is awarded only if every visible symbol across all wheels matches perfectly.
+     * If won, the machine will celebrate by illuminating its background.
      * 
-     * @return true if the configuration is a jackpot, false otherwise.
+     * @return True if the current configuration is a jackpot, false otherwise.
      */
     public boolean isJackpot() {
-        // A machine with no wheels cannot trigger a jackpot
         if (wheels.isEmpty()) {
             this.isOk = false;
             return false;
         }
-
         String[] currentConfig = configuration();
         String winningSymbol = currentConfig[0];
-        
-        // If the first wheel is empty (null), there is no jackpot
         if (winningSymbol == null) {
             this.isOk = false;
             return false;
         }
-
-        // Compare all other symbols against the first one
         boolean isWin = true;
         for (int i = 1; i < currentConfig.length; i++) {
             if (currentConfig[i] == null || !currentConfig[i].equals(winningSymbol)) {
                 isWin = false;
-                break; // Stop checking, we already know it's not a win
+                break; 
             }
         }
-
-        // Visual celebration mechanics
         if (isWin) {
-            this.background.changeColor("yellow"); // Jackpot lights!
+            this.background.changeColor("yellow"); 
         } else {
-            this.background.changeColor("black");  // Normal state
+            this.background.changeColor("black");  
         }
-        
+        if (this.isVisible) {
+            for (Wheel w : wheels) {
+                w.makeInvisible();
+                w.makeVisible();
+            }
+        }
         this.isOk = true;
         return isWin;
     }
     
     /**
-     * Safely terminates the slot machine simulation by hiding all visual 
-     * elements and rendering the machine inactive.
+     * Safely closes the simulation by hiding all components and clearing the screen.
      */
     public void exit() {
         this.makeInvisible();
-        // Opcional: limpiar las listas si se desea un reinicio total de los datos
-        // this.wheels.clear();
-        // this.allowedSymbols.clear();
         this.isOk = true;
     }
     
     /**
-     * Returns the status of the last executed operation.
+     * Checks the success status of the most recently executed method.
      * 
-     * @return true if the last operation was successful, false otherwise.
+     * @return True if the last operation completed successfully, false if it failed.
      */
     public boolean ok(){
         return isOk;
