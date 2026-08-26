@@ -23,7 +23,6 @@ public class SlotMachine
         this.allowedSymbols = new ArrayList<>();
         this.isOk = true;
         this.isVisible = false;
-        
         this.background = new Rectangle();
         background.changeColor("black");
         background.moveHorizontal(50);
@@ -51,24 +50,18 @@ public class SlotMachine
      * Add wheels with their background in slotMachine.
      */
     public void addWheel(int pos){
-        // Al momento de registrar una posicion negativa o cero, lo corrige y lo toma como la posicion 1.
         if (pos < 1){
             pos = 1;
         }
         
-        // Esto funciona como un ArrayList, donde si se quiere meter una nueva rueda, puede 
-        // agrandar el tamaño del limite superior (insercion al final).
         if (pos > wheels.size() + 1){
             pos = wheels.size() + 1;
         }
-        
-        // Crea una nueva rueda (objeto).
-        Wheel nuevaRueda = new Wheel();
-        
-        // Añade a la ArrayList en la posicion correcta (pos - 1 para el indice de Java).
+        Wheel nuevaRueda = new Wheel();        
         wheels.add(pos - 1, nuevaRueda);
-        
-        // Actualiza el estado de la operacion, donde informa que si se pudo hacer el cambio. 
+        if (this.isVisible) {
+            nuevaRueda.makeVisible();
+        }
         this.isOk = true;
     }
     
@@ -76,27 +69,49 @@ public class SlotMachine
      * Deletes a wheel with a background who is attach. 
      */
     public void delWheel(int pos){
-        // Si no hay ruedas en la maquina, no hay nada que borrar y la operacion falla.
         if (wheels.isEmpty()){
             this.isOk = false;
             return;
         }
         
-        // Al momento de registrar una posicion negativa o cero, lo corrige y lo toma como la posicion 1.
         if (pos < 1){
             pos = 1;
         }
         
-        // Esto funciona como un ArrayList, donde utiliza el limite superior maximo de elementos existentes.
         if (pos > wheels.size()){
             pos = wheels.size();
         }
         
-        // Elimina el objeto utilizando la posicion del usuario (restando 1 para el indice).   
         wheels.remove(pos - 1);
         
-        // Actualiza el estado de la operacion.
         this.isOk = true;
+    }
+    
+    /**
+     * Adds a symbol (color) to the list with the position.
+     */
+    public void addSymbol(int pos, String color){
+        if (pos < 1){
+            pos = 1;
+        }
+        
+        if (pos > allowedSymbols.size() + 1){
+            pos = allowedSymbols.size() + 1;
+        }
+        allowedSymbols.add(pos - 1, color);
+        this.isOk = true;
+    }
+    
+    /**
+     * Deletes a symbol by the color in the list 
+     */
+    public void delSymbol(String symbol){
+        boolean pudoBorrar = allowedSymbols.remove(symbol);
+        if (pudoBorrar) {
+            this.isOk = true;
+        } else {
+            this.isOk = false;
+        }
     }
     
     /**
