@@ -1,4 +1,4 @@
-
+import java.util.*;
 /**
  * Wheels of the slotMachine.
  *
@@ -8,13 +8,23 @@
 public class Wheel
 {
     // instance variables - replace the example below with your own
-
+    private ArrayList<String> colors;
+    private boolean isVisible;
+    private Circle background;
+    private int currentColor;
+    
     /**
      * Constructor for objects of class Wheel
      */
     public Wheel()
     {
         // initialise instance variables
+        colors = new ArrayList<>();
+        isVisible = false;
+        background = new Circle();
+        currentColor = 0;
+        
+        
     }
     
     /**
@@ -22,6 +32,24 @@ public class Wheel
      */
     public void turnAround()
     {
-        //wheel functionalities
+        //Suma cada posicion para que esta gire mediante colores, donde comienza en la posicion
+        // 0
+        currentColor = currentColor + 1;
+    }
+    
+    /**
+     * Method for make visible the object
+     */
+    public void makeVisible(){
+        //Cambia el estado del objeto de visible a true 
+        isVisible = true;
+    }
+    
+    /**
+     * Method for make invible the object
+     */
+    public void makeInvisible(){
+        //Cambia el estado del objeto de visible a false
+        isVisible = false;
     }
 }
