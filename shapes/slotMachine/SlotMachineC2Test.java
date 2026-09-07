@@ -3,28 +3,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Suite de pruebas unitarias automatizadas para SlotMachine (Ciclos 1 y 2).
- * Todas las pruebas se ejecutan en modo invisible para no interrumpir con diálogos.
+ *  Pruebas unitarias automatizadas para SlotMachine (Ciclos 1 y 2).
+ * Todas las pruebas se ejecutan en modo invisible.
  * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 3.0 (Cobertura Total)
+ * @version 2.0
  */
 public class SlotMachineC2Test {
     private SlotMachine machine;
 
     @Before
     public void setUp() {
-        // Arrange general: instancia limpia antes de cada prueba
         machine = new SlotMachine();
     }
 
-    // =========================================================================
-    // CICLO 1: REQUISITOS 1 A 8 (ESTADO, INSERCIÓN Y JACKPOT)
-    // =========================================================================
-
     @Test
     public void shouldCreateEmptyMachineWithOkStatus() {
-        // Assert
         assertTrue("La maquina recien creada debe iniciar en estado ok", machine.ok());
         assertEquals(0, machine.configuration().length);
     }
@@ -77,9 +71,7 @@ public class SlotMachineC2Test {
         assertTrue(machine.ok());
     }
 
-    // =========================================================================
-    // CICLO 1: PRUEBAS COMPLEMENTARIAS (ELIMINACIÓN, CONSULTAS Y VISIBILIDAD)
-    // =========================================================================
+    // Ciclo 1
 
     @Test
     public void shouldDeleteWheelAndSymbolCorrectly() {
@@ -174,9 +166,7 @@ public class SlotMachineC2Test {
         assertTrue("Debe ejecutar la salida correctamente", machine.ok());
     }
 
-    // =========================================================================
-    // CICLO 2: REQUISITOS 9 Y 10 (MANAGE WHEELS: SWAP, LOCK, UNLOCK)
-    // =========================================================================
+    // Ciclo 2
 
     @Test
     public void shouldSwapTwoWheelsCorrectly() {

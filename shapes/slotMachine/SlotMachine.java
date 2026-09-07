@@ -6,16 +6,15 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
- * Controlador principal del simulador de Máquina Tragamonedas (Slot Machine).
- * Cumple los requisitos de ambos ciclos, gestionando la presentación visual en canvas,
- * la animación de giros, el bloqueo y la evaluación numérica del Jackpot.
+ * Controlador principal del simulador de Maquina (Slot Machine).
  * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 5.0 (Corrección de Parámetros BlueJ)
+ * @version 2.0
  */
 public class SlotMachine {
     private boolean isOk;
     private boolean isVisible;
+    private boolean isJackpotActive;
     private ArrayList<Wheel> wheels;
     private ArrayList<String> allowedSymbols;
 
@@ -24,47 +23,48 @@ public class SlotMachine {
     private Rectangle screenBezel;
     private Rectangle screenArea;
 
-    // Espaciado matemático exacto para evitar desbordamientos
-    private final int WHEEL_SPACING = 65; // Ancho 50 + 15 de margen
-    private final int BASE_X = 55;        // Margen izquierdo dentro de la pantalla verde
-    private final int BASE_Y = 80;        // Margen superior dentro de la pantalla verde
+    private final int WHEEL_SPACING = 65; 
+    private final int BASE_X = 55;        
+    private final int BASE_Y = 80;        
 
+    /**
+     * Inicializa la maquina y sus componentes visuales base.
+     */
     public SlotMachine() {
         this.wheels = new ArrayList<>();
         this.allowedSymbols = new ArrayList<>();
         this.isOk = true;
         this.isVisible = false;
+        this.isJackpotActive = false;
 
-        // 1. Gabinete (Fondo general azul)
         this.mainCabinet = new Rectangle();
         this.mainCabinet.changeColor("blue");
-        // ATENCIÓN BLUEJ: changeSize(alto, ancho) -> Alto: 220, Ancho: 260
         this.mainCabinet.changeSize(220, 260); 
-        this.mainCabinet.moveHorizontal(-60 + 20); // Posición X = 20
-        this.mainCabinet.moveVertical(-50 + 20);   // Posición Y = 20
+        this.mainCabinet.moveHorizontal(-60 + 20);
+        this.mainCabinet.moveVertical(-50 + 20); 
 
-        // 2. Marquesina (Luz superior indicadora)
         this.marqueeLamp = new Rectangle();
         this.marqueeLamp.changeColor("red");
-        this.marqueeLamp.changeSize(15, 220); // Alto 15, Ancho 220
-        this.marqueeLamp.moveHorizontal(-60 + 40); // Posición X = 40
-        this.marqueeLamp.moveVertical(-50 + 30);   // Posición Y = 30
+        this.marqueeLamp.changeSize(15, 220); 
+        this.marqueeLamp.moveHorizontal(-60 + 40); 
+        this.marqueeLamp.moveVertical(-50 + 30);
 
-        // 3. Marco de la pantalla
         this.screenBezel = new Rectangle();
         this.screenBezel.changeColor("yellow");
-        this.screenBezel.changeSize(130, 240); // Alto 130, Ancho 240
-        this.screenBezel.moveHorizontal(-60 + 30); // Posición X = 30
-        this.screenBezel.moveVertical(-50 + 60);   // Posición Y = 60
+        this.screenBezel.changeSize(130, 240);
+        this.screenBezel.moveHorizontal(-60 + 30);
+        this.screenBezel.moveVertical(-50 + 60);
 
-        // 4. Zona interior (Pantalla Verde)
         this.screenArea = new Rectangle();
         this.screenArea.changeColor("green");
-        this.screenArea.changeSize(110, 220); // Alto 110, Ancho 220
-        this.screenArea.moveHorizontal(-60 + 40); // Posición X = 40
-        this.screenArea.moveVertical(-50 + 70);   // Posición Y = 70
+        this.screenArea.changeSize(110, 220);
+        this.screenArea.moveHorizontal(-60 + 40);
+        this.screenArea.moveVertical(-50 + 70);
     }
 
+    /**
+     * Muestra la maquina y sus ruedas en pantalla respetando el orden de capas.
+     */
     public void makeVisible() {
         this.mainCabinet.makeVisible();
         this.marqueeLamp.makeVisible();
@@ -77,6 +77,9 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Oculta la maquina y sus ruedas de la pantalla.
+     */
     public void makeInvisible() {
         this.mainCabinet.makeInvisible();
         this.marqueeLamp.makeInvisible();
@@ -89,10 +92,16 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Añade una nueva rueda al final de la maquina.
+     */
     public boolean addWheel() {
         return addWheel(this.wheels.size() + 1);
     }
 
+    /**
+     * Añade una nueva rueda en una posicion especifica.
+     */
     public boolean addWheel(int pos) {
         int targetPos = pos;
         if (targetPos < 1) targetPos = 1;
@@ -100,7 +109,6 @@ public class SlotMachine {
 
         Wheel newWheel = new Wheel();
         
-        // Colocación exacta dentro de la pantalla verde
         int displacementX = BASE_X + ((targetPos - 1) * WHEEL_SPACING);
         newWheel.moveHorizontal(displacementX);
         newWheel.moveVertical(BASE_Y);
@@ -117,6 +125,9 @@ public class SlotMachine {
         return true;
     }
 
+    /**
+     * Elimina la rueda de la posicion indicada.
+     */
     public void delWheel(int pos) {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas instaladas para eliminar.");
@@ -133,6 +144,9 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Intercambia la posicion de dos ruedas.
+     */
     public void swap(int wheel1, int wheel2) {
         if (this.wheels.size() < 2) {
             notifyError("Se necesitan al menos dos ruedas para intercambiar.");
@@ -161,6 +175,9 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Bloquea una rueda para que no gire.
+     */
     public void lock(int wheel) {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas para fijar.");
@@ -171,6 +188,9 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Desbloquea una rueda previamente fijada.
+     */
     public void unlock(int wheel) {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas para soltar.");
@@ -181,13 +201,16 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Registra un simbolo nuevo en la lista permitida.
+     */
     public void addSymbol(int pos, String color) {
         if (color == null || color.trim().isEmpty()) {
-            notifyError("El nombre del símbolo no puede ser vacío.");
+            notifyError("El nombre del simbolo no puede ser vacio.");
             return;
         }
         if (this.allowedSymbols.contains(color)) {
-            notifyError("El símbolo '" + color + "' ya existe.");
+            notifyError("El simbolo '" + color + "' ya existe.");
             return;
         }
 
@@ -196,22 +219,28 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Elimina un simbolo de la lista permitida.
+     */
     public void delSymbol(String symbol) {
         boolean wasRemoved = this.allowedSymbols.remove(symbol);
         if (wasRemoved) {
             this.isOk = true;
         } else {
-            notifyError("El símbolo '" + symbol + "' no está registrado.");
+            notifyError("El simbolo '" + symbol + "' no esta registrado.");
         }
     }
 
+    /**
+     * Asigna un simbolo valido a una rueda.
+     */
     public void placeSymbol(int wheel, String symbol) {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas instaladas.");
             return;
         }
         if (!this.allowedSymbols.contains(symbol)) {
-            notifyError("El símbolo no está autorizado.");
+            notifyError("El simbolo no esta autorizado.");
             return;
         }
 
@@ -220,10 +249,16 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Gira una rueda un paso hacia adelante.
+     */
     public void spin(int wheel) {
         spin(wheel, 1);
     }
 
+    /**
+     * Gira una rueda multiples pasos con animacion visible.
+     */
     public void spin(int wheel, int steps) {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas para girar.");
@@ -234,12 +269,12 @@ public class SlotMachine {
         Wheel target = this.wheels.get(w - 1);
 
         if (target.isLocked()) {
-            notifyError("La rueda " + w + " está bloqueada.");
+            notifyError("La rueda " + w + " esta bloqueada.");
             return;
         }
 
         if (target.getSymbols().isEmpty()) {
-            notifyError("La rueda no posee símbolos.");
+            notifyError("La rueda no posee simbolos.");
             return;
         }
 
@@ -262,16 +297,19 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Asigna una configuracion especifica de simbolos a todas las ruedas.
+     */
     public void spin(String[] setSymbols) {
         if (setSymbols == null || setSymbols.length != this.wheels.size()) {
-            notifyError("La configuración no coincide con las ruedas.");
+            notifyError("La configuracion no coincide con las ruedas.");
             return;
         }
 
         for (int i = 0; i < setSymbols.length; i++) {
             String sym = setSymbols[i];
             if (!this.allowedSymbols.contains(sym) || !this.wheels.get(i).getSymbols().contains(sym)) {
-                notifyError("El símbolo '" + sym + "' no es válido.");
+                notifyError("El simbolo '" + sym + "' no es valido.");
                 return;
             }
         }
@@ -284,6 +322,9 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Gira un paso todas las ruedas no bloqueadas.
+     */
     public void spin() {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas para girar.");
@@ -298,11 +339,17 @@ public class SlotMachine {
         this.isOk = true;
     }
 
+    /**
+     * Retorna los simbolos presentes en la primera rueda.
+     */
     public String[] symbols() {
         if (this.wheels.isEmpty()) return new String[0];
         return this.wheels.get(0).getSymbols().toArray(new String[0]);
     }
 
+    /**
+     * Retorna la cantidad total de simbolos unicos en toda la maquina.
+     */
     public int distinctSymbols() {
         HashSet<String> distinct = new HashSet<>();
         for (Wheel w : this.wheels) {
@@ -311,6 +358,9 @@ public class SlotMachine {
         return distinct.size();
     }
 
+    /**
+     * Retorna la combinacion de simbolos visibles actualmente.
+     */
     public String[] configuration() {
         String[] config = new String[this.wheels.size()];
         for (int i = 0; i < this.wheels.size(); i++) {
@@ -319,6 +369,9 @@ public class SlotMachine {
         return config;
     }
 
+    /**
+     * Verifica si todas las ruedas muestran el mismo simbolo.
+     */
     public boolean isJackpot() {
         if (this.wheels.isEmpty()) {
             notifyError("No hay ruedas para evaluar.");
@@ -329,7 +382,7 @@ public class SlotMachine {
         int targetId = numericConfig[0];
 
         if (targetId == -1) {
-            notifyError("Ruedas sin símbolos definidos.");
+            notifyError("Ruedas sin simbolos definidos.");
             return false;
         }
 
@@ -341,24 +394,21 @@ public class SlotMachine {
         boolean isWin = (matchCount == this.wheels.size());
 
         if (isWin) {
-            // Jackpot Visual (Req 6)
             this.marqueeLamp.changeColor("yellow");
             this.screenBezel.changeColor("green");
+            this.isJackpotActive = true;
+            fixZOrder();
         } else {
             resetJackpotVisuals();
-        }
-
-        if (this.isVisible) {
-            for (Wheel w : this.wheels) {
-                w.makeInvisible();
-                w.makeVisible();
-            }
         }
 
         this.isOk = true;
         return isWin;
     }
 
+    /**
+     * Convierte los simbolos visibles actuales a indices numericos.
+     */
     public int[] getNumericConfiguration() {
         int[] numConfig = new int[this.wheels.size()];
         Map<String, Integer> symbolDirectory = new HashMap<>();
@@ -375,26 +425,59 @@ public class SlotMachine {
         return numConfig;
     }
 
+    /**
+     * Oculta el simulador y termina la sesion visual.
+     */
     public void exit() {
         makeInvisible();
         this.isOk = true;
     }
 
+    /**
+     * Retorna true si la ultima operacion fue exitosa.
+     */
     public boolean ok() {
         return this.isOk;
     }
 
+    /**
+     * Asegura que una posicion este dentro de los limites validos.
+     */
     private int clipPosition(int pos, int max) {
         if (pos < 1) return 1;
         if (pos > max) return max;
         return pos;
     }
 
+    /**
+     * Restaura los colores normales y previene que tapen a las ruedas (Z-Index fix).
+     */
     private void resetJackpotVisuals() {
-        this.marqueeLamp.changeColor("red");
-        this.screenBezel.changeColor("yellow");
+        if (this.isJackpotActive) {
+            this.marqueeLamp.changeColor("red");
+            this.screenBezel.changeColor("yellow");
+            this.isJackpotActive = false;
+            fixZOrder();
+        }
     }
 
+    /**
+     * Restaura el orden de las capas de BlueJ tras un cambio de color.
+     */
+    private void fixZOrder() {
+        if (this.isVisible) {
+            this.screenArea.makeInvisible();
+            this.screenArea.makeVisible();
+            for (Wheel w : this.wheels) {
+                w.makeInvisible();
+                w.makeVisible();
+            }
+        }
+    }
+
+    /**
+     * Fija isOk en falso y muestra alerta si esta visible.
+     */
     private void notifyError(String message) {
         this.isOk = false;
         if (this.isVisible) {
@@ -402,6 +485,9 @@ public class SlotMachine {
         }
     }
 
+    /**
+     * Pausa la ejecucion para animacion.
+     */
     private void pause(int millis) {
         try {
             Thread.sleep(millis);
