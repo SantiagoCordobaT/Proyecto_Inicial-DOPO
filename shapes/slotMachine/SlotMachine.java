@@ -1,313 +1,412 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
- * Main controller for the Slot Machine simulator.
- * This class handles the core logic, managing the wheels, the authorized symbols, and the overall visual state of the game.
- *
+ * Controlador principal del simulador de Máquina Tragamonedas (Slot Machine).
+ * Cumple los requisitos de ambos ciclos, gestionando la presentación visual en canvas,
+ * la animación de giros, el bloqueo y la evaluación numérica del Jackpot.
+ * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 1.0
+ * @version 5.0 (Corrección de Parámetros BlueJ)
  */
-public class SlotMachine
-{
+public class SlotMachine {
     private boolean isOk;
     private boolean isVisible;
     private ArrayList<Wheel> wheels;
     private ArrayList<String> allowedSymbols;
-    private Rectangle background;
 
-    /**
-     * Constructs a new Slot Machine.
-     * Initializes the empty collections and sets up the default visual background.
-     */
-    public SlotMachine()
-    {
+    private Rectangle mainCabinet;
+    private Rectangle marqueeLamp;
+    private Rectangle screenBezel;
+    private Rectangle screenArea;
+
+    // Espaciado matemático exacto para evitar desbordamientos
+    private final int WHEEL_SPACING = 65; // Ancho 50 + 15 de margen
+    private final int BASE_X = 55;        // Margen izquierdo dentro de la pantalla verde
+    private final int BASE_Y = 80;        // Margen superior dentro de la pantalla verde
+
+    public SlotMachine() {
         this.wheels = new ArrayList<>();
         this.allowedSymbols = new ArrayList<>();
         this.isOk = true;
         this.isVisible = false;
-        
-        this.background = new Rectangle();
-        this.background.changeColor("black");
-        this.background.moveHorizontal(50);
-        this.background.moveVertical(50);
-        this.background.changeSize(300, 200);
+
+        // 1. Gabinete (Fondo general azul)
+        this.mainCabinet = new Rectangle();
+        this.mainCabinet.changeColor("blue");
+        // ATENCIÓN BLUEJ: changeSize(alto, ancho) -> Alto: 220, Ancho: 260
+        this.mainCabinet.changeSize(220, 260); 
+        this.mainCabinet.moveHorizontal(-60 + 20); // Posición X = 20
+        this.mainCabinet.moveVertical(-50 + 20);   // Posición Y = 20
+
+        // 2. Marquesina (Luz superior indicadora)
+        this.marqueeLamp = new Rectangle();
+        this.marqueeLamp.changeColor("red");
+        this.marqueeLamp.changeSize(15, 220); // Alto 15, Ancho 220
+        this.marqueeLamp.moveHorizontal(-60 + 40); // Posición X = 40
+        this.marqueeLamp.moveVertical(-50 + 30);   // Posición Y = 30
+
+        // 3. Marco de la pantalla
+        this.screenBezel = new Rectangle();
+        this.screenBezel.changeColor("yellow");
+        this.screenBezel.changeSize(130, 240); // Alto 130, Ancho 240
+        this.screenBezel.moveHorizontal(-60 + 30); // Posición X = 30
+        this.screenBezel.moveVertical(-50 + 60);   // Posición Y = 60
+
+        // 4. Zona interior (Pantalla Verde)
+        this.screenArea = new Rectangle();
+        this.screenArea.changeColor("green");
+        this.screenArea.changeSize(110, 220); // Alto 110, Ancho 220
+        this.screenArea.moveHorizontal(-60 + 40); // Posición X = 40
+        this.screenArea.moveVertical(-50 + 70);   // Posición Y = 70
     }
 
-    /**
-     * Displays the slot machine and all its components on the screen.
-     */
-    public void makeVisible(){
-        background.makeVisible();
+    public void makeVisible() {
+        this.mainCabinet.makeVisible();
+        this.marqueeLamp.makeVisible();
+        this.screenBezel.makeVisible();
+        this.screenArea.makeVisible();
+        for (Wheel w : this.wheels) {
+            w.makeVisible();
+        }
         this.isVisible = true;
+        this.isOk = true;
     }
-    
-    /**
-     * Hides the slot machine and all its components from the screen.
-     */
-    public void makeInvisible(){
-        background.makeInvisible();
+
+    public void makeInvisible() {
+        this.mainCabinet.makeInvisible();
+        this.marqueeLamp.makeInvisible();
+        this.screenBezel.makeInvisible();
+        this.screenArea.makeInvisible();
+        for (Wheel w : this.wheels) {
+            w.makeInvisible();
+        }
         this.isVisible = false;
+        this.isOk = true;
     }
-    
-    /**
-     * Adds a new wheel to the machine at the position (pos).
-     * It also calculates the appropriate spatial coordinates to ensure the wheel is perfectly aligned within the machine's casing.
-     * 
-     * @param pos The position where the wheel should be inserted, starting from 1.
-     */
-    public void addWheel(int pos){
-        if (pos < 1){
-            pos = 1;
-        }
+
+    public boolean addWheel() {
+        return addWheel(this.wheels.size() + 1);
+    }
+
+    public boolean addWheel(int pos) {
+        int targetPos = pos;
+        if (targetPos < 1) targetPos = 1;
+        if (targetPos > this.wheels.size() + 1) targetPos = this.wheels.size() + 1;
+
+        Wheel newWheel = new Wheel();
         
-        if (pos > wheels.size() + 1){
-            pos = wheels.size() + 1;
-        }
-        
-        Wheel newWheel = new Wheel(); 
-        newWheel.moveVertical(50);
-        int displacementX = 60 + ((pos - 1) * 60);
+        // Colocación exacta dentro de la pantalla verde
+        int displacementX = BASE_X + ((targetPos - 1) * WHEEL_SPACING);
         newWheel.moveHorizontal(displacementX);
-        wheels.add(pos - 1, newWheel);
-        
+        newWheel.moveVertical(BASE_Y);
+
+        for (int i = targetPos - 1; i < this.wheels.size(); i++) {
+            this.wheels.get(i).moveHorizontal(WHEEL_SPACING);
+        }
+
+        this.wheels.add(targetPos - 1, newWheel);
         if (this.isVisible) {
             newWheel.makeVisible();
         }
-        
         this.isOk = true;
+        return true;
     }
-    
-    /**
-     * Removes a wheel from the machine.
-     * 
-     * @param pos The position of the wheel to remove, from 1.
-     */
-    public void delWheel(int pos){
-        if (wheels.isEmpty()){
-            this.isOk = false;
+
+    public void delWheel(int pos) {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas instaladas para eliminar.");
             return;
         }
-        
-        if (pos < 1){
-            pos = 1;
+
+        int targetPos = clipPosition(pos, this.wheels.size());
+        Wheel removed = this.wheels.remove(targetPos - 1);
+        removed.makeInvisible();
+
+        for (int i = targetPos - 1; i < this.wheels.size(); i++) {
+            this.wheels.get(i).moveHorizontal(-WHEEL_SPACING);
         }
-        
-        if (pos > wheels.size()){
-            pos = wheels.size();
-        }
-        
-        wheels.remove(pos - 1);
         this.isOk = true;
     }
-    
-    /**
-     * Registers a new authorized symbol color into the machine's system.
-     * 
-     * @param pos The position in the registry where the symbol will be saved, starting from 1.
-     * @param color The specific color name of the symbol.
-     */
-    public void addSymbol(int pos, String color){
-        if (pos < 1){
-            pos = 1;
+
+    public void swap(int wheel1, int wheel2) {
+        if (this.wheels.size() < 2) {
+            notifyError("Se necesitan al menos dos ruedas para intercambiar.");
+            return;
         }
-        
-        if (pos > allowedSymbols.size() + 1){
-            pos = allowedSymbols.size() + 1;
+
+        int w1 = clipPosition(wheel1, this.wheels.size());
+        int w2 = clipPosition(wheel2, this.wheels.size());
+
+        if (w1 == w2) {
+            notifyError("No se puede intercambiar una rueda consigo misma.");
+            return;
         }
-        
-        allowedSymbols.add(pos - 1, color);
+
+        int idx1 = w1 - 1;
+        int idx2 = w2 - 1;
+
+        Wheel obj1 = this.wheels.get(idx1);
+        Wheel obj2 = this.wheels.get(idx2);
+
+        int pixelDistance = (idx2 - idx1) * WHEEL_SPACING;
+        obj1.moveHorizontal(pixelDistance);
+        obj2.moveHorizontal(-pixelDistance);
+
+        Collections.swap(this.wheels, idx1, idx2);
         this.isOk = true;
     }
-    
-    /**
-     * Deletes a registered symbol from the machine's system using its color name.
-     * 
-     * @param symbol The exact color name of the symbol to delete.
-     */
-    public void delSymbol(String symbol){
-        boolean wasDeleted = allowedSymbols.remove(symbol);
-        
-        if (wasDeleted) {
+
+    public void lock(int wheel) {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas para fijar.");
+            return;
+        }
+        int w = clipPosition(wheel, this.wheels.size());
+        this.wheels.get(w - 1).lock();
+        this.isOk = true;
+    }
+
+    public void unlock(int wheel) {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas para soltar.");
+            return;
+        }
+        int w = clipPosition(wheel, this.wheels.size());
+        this.wheels.get(w - 1).unlock();
+        this.isOk = true;
+    }
+
+    public void addSymbol(int pos, String color) {
+        if (color == null || color.trim().isEmpty()) {
+            notifyError("El nombre del símbolo no puede ser vacío.");
+            return;
+        }
+        if (this.allowedSymbols.contains(color)) {
+            notifyError("El símbolo '" + color + "' ya existe.");
+            return;
+        }
+
+        int targetPos = clipPosition(pos, this.allowedSymbols.size() + 1);
+        this.allowedSymbols.add(targetPos - 1, color);
+        this.isOk = true;
+    }
+
+    public void delSymbol(String symbol) {
+        boolean wasRemoved = this.allowedSymbols.remove(symbol);
+        if (wasRemoved) {
             this.isOk = true;
         } else {
-            this.isOk = false;
+            notifyError("El símbolo '" + symbol + "' no está registrado.");
         }
     }
-    
-    /**
-     * Places a specific authorized symbol in the wheel.
-     * 
-     * @param wheel The position of the target wheel, starting from 1.
-     * @param symbol The color of the symbol to place.
-     */
-    public void placeSymbol(int wheel, String symbol){
-        if (wheels.isEmpty()){
-            this.isOk = false;
+
+    public void placeSymbol(int wheel, String symbol) {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas instaladas.");
             return;
         }
-        
-        if (wheel < 1){
-            wheel = 1;
-        }
-        
-        if (wheel > wheels.size()){
-            wheel = wheels.size();
-        }
-        
-        if (!allowedSymbols.contains(symbol)) {
-            this.isOk = false;
+        if (!this.allowedSymbols.contains(symbol)) {
+            notifyError("El símbolo no está autorizado.");
             return;
         }
-        
-        Wheel targetWheel = wheels.get(wheel - 1);
-        targetWheel.place(symbol); 
-        
+
+        int targetWheel = clipPosition(wheel, this.wheels.size());
+        this.wheels.get(targetWheel - 1).place(symbol);
         this.isOk = true;
     }
-    
-    /**
-     * Triggers a spin on a single, specific wheel.
-     * 
-     * @param wheel The position of the wheel to spin, starting from 1.
-     */
-    public void spin(int wheel){
-        if (wheels.isEmpty()){
-            this.isOk = false;
+
+    public void spin(int wheel) {
+        spin(wheel, 1);
+    }
+
+    public void spin(int wheel, int steps) {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas para girar.");
             return;
         }
-        
-        if (wheel < 1){
-            wheel = 1;
-        }
-        
-        if (wheel > wheels.size()){
-            wheel = wheels.size();
-        }
-        
-        Wheel targetWheel = wheels.get(wheel - 1);
-        targetWheel.spin();
-        
-        this.background.changeColor("black");
-        this.isOk = true;
-    }
-    
-    /**
-     * Triggers a simultaneous spin on all the wheels currently installed in the machine.
-     */
-    public void spin(){
-        if (wheels.isEmpty()){
-            this.isOk = false;
+
+        int w = clipPosition(wheel, this.wheels.size());
+        Wheel target = this.wheels.get(w - 1);
+
+        if (target.isLocked()) {
+            notifyError("La rueda " + w + " está bloqueada.");
             return;
         }
-        
-        for (Wheel w : wheels) {
-            w.spin();
+
+        if (target.getSymbols().isEmpty()) {
+            notifyError("La rueda no posee símbolos.");
+            return;
         }
-        
-        this.isOk = true;
-    }
-    
-    /**
-     * Retrieves the colors of all symbols currently configured on the first wheel.
-     * 
-     * @return An array of strings representing the colors on the first wheel.
-     */
-    public String[] symbols() {
-        if (wheels.isEmpty()) {
-            return new String[0]; 
-        }
-        
-        Wheel firstWheel = wheels.get(0);
-        ArrayList<String> firstWheelSymbols = firstWheel.getSymbols();
-        
-        return firstWheelSymbols.toArray(new String[0]);
-    }
-    
-    /**
-     * Calculates the total amount of unique symbol colors installed across every wheel.
-     * 
-     * @return The exact count of unique symbols.
-     */
-    public int distinctSymbols() {
-        HashSet<String> uniqueSymbols = new HashSet<>();
-        
-        for (Wheel w : wheels) {
-            ArrayList<String> wheelSymbols = w.getSymbols();
-            uniqueSymbols.addAll(wheelSymbols);
-        }
-        
-        return uniqueSymbols.size();
-    }
-    
-    /**
-     * Gathers the current visual state of the machine by checking which symbol is displayed on each wheel from left to right.
-     * 
-     * @return An array containing the colors of the currently visible symbols.
-     */
-    public String[] configuration() {
-        String[] config = new String[wheels.size()];
-        
-        for (int i = 0; i < wheels.size(); i++) {
-            config[i] = wheels.get(i).getVisibleSymbol();
-        }
-        
-        return config;
-    }
-    
-    /**
-     * Evaluates the current configuration to determine if the player has won the jackpot.
-     * A jackpot is awarded only if every visible symbol across all wheels matches perfectly.
-     * If won, the machine will celebrate by illuminating its background.
-     * 
-     * @return True if the current configuration is a jackpot, false otherwise.
-     */
-    public boolean isJackpot() {
-        if (wheels.isEmpty()) {
-            this.isOk = false;
-            return false;
-        }
-        String[] currentConfig = configuration();
-        String winningSymbol = currentConfig[0];
-        if (winningSymbol == null) {
-            this.isOk = false;
-            return false;
-        }
-        boolean isWin = true;
-        for (int i = 1; i < currentConfig.length; i++) {
-            if (currentConfig[i] == null || !currentConfig[i].equals(winningSymbol)) {
-                isWin = false;
-                break; 
+
+        int totalSteps = Math.abs(steps);
+        boolean forward = steps >= 0;
+
+        for (int i = 0; i < totalSteps; i++) {
+            if (forward) {
+                target.spin();
+            } else {
+                target.spinBackwards();
+            }
+
+            if (this.isVisible) {
+                pause(90);
             }
         }
-        if (isWin) {
-            this.background.changeColor("yellow"); 
-        } else {
-            this.background.changeColor("black");  
+
+        resetJackpotVisuals();
+        this.isOk = true;
+    }
+
+    public void spin(String[] setSymbols) {
+        if (setSymbols == null || setSymbols.length != this.wheels.size()) {
+            notifyError("La configuración no coincide con las ruedas.");
+            return;
         }
+
+        for (int i = 0; i < setSymbols.length; i++) {
+            String sym = setSymbols[i];
+            if (!this.allowedSymbols.contains(sym) || !this.wheels.get(i).getSymbols().contains(sym)) {
+                notifyError("El símbolo '" + sym + "' no es válido.");
+                return;
+            }
+        }
+
+        for (int i = 0; i < setSymbols.length; i++) {
+            this.wheels.get(i).setVisibleSymbol(setSymbols[i]);
+        }
+
+        resetJackpotVisuals();
+        this.isOk = true;
+    }
+
+    public void spin() {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas para girar.");
+            return;
+        }
+
+        for (Wheel w : this.wheels) {
+            if (!w.isLocked()) w.spin();
+        }
+
+        resetJackpotVisuals();
+        this.isOk = true;
+    }
+
+    public String[] symbols() {
+        if (this.wheels.isEmpty()) return new String[0];
+        return this.wheels.get(0).getSymbols().toArray(new String[0]);
+    }
+
+    public int distinctSymbols() {
+        HashSet<String> distinct = new HashSet<>();
+        for (Wheel w : this.wheels) {
+            distinct.addAll(w.getSymbols());
+        }
+        return distinct.size();
+    }
+
+    public String[] configuration() {
+        String[] config = new String[this.wheels.size()];
+        for (int i = 0; i < this.wheels.size(); i++) {
+            config[i] = this.wheels.get(i).getVisibleSymbol();
+        }
+        return config;
+    }
+
+    public boolean isJackpot() {
+        if (this.wheels.isEmpty()) {
+            notifyError("No hay ruedas para evaluar.");
+            return false;
+        }
+
+        int[] numericConfig = getNumericConfiguration();
+        int targetId = numericConfig[0];
+
+        if (targetId == -1) {
+            notifyError("Ruedas sin símbolos definidos.");
+            return false;
+        }
+
+        int matchCount = 0;
+        for (int id : numericConfig) {
+            if (id == targetId) matchCount++;
+        }
+
+        boolean isWin = (matchCount == this.wheels.size());
+
+        if (isWin) {
+            // Jackpot Visual (Req 6)
+            this.marqueeLamp.changeColor("yellow");
+            this.screenBezel.changeColor("green");
+        } else {
+            resetJackpotVisuals();
+        }
+
         if (this.isVisible) {
-            for (Wheel w : wheels) {
+            for (Wheel w : this.wheels) {
                 w.makeInvisible();
                 w.makeVisible();
             }
         }
+
         this.isOk = true;
         return isWin;
     }
-    
-    /**
-     * Safely closes the simulation by hiding all components and clearing the screen.
-     */
+
+    public int[] getNumericConfiguration() {
+        int[] numConfig = new int[this.wheels.size()];
+        Map<String, Integer> symbolDirectory = new HashMap<>();
+
+        for (int i = 0; i < this.allowedSymbols.size(); i++) {
+            symbolDirectory.put(this.allowedSymbols.get(i), i);
+        }
+
+        for (int i = 0; i < this.wheels.size(); i++) {
+            String sym = this.wheels.get(i).getVisibleSymbol();
+            numConfig[i] = (sym != null && symbolDirectory.containsKey(sym)) ? symbolDirectory.get(sym) : -1;
+        }
+
+        return numConfig;
+    }
+
     public void exit() {
-        this.makeInvisible();
+        makeInvisible();
         this.isOk = true;
     }
-    
-    /**
-     * Checks the success status of the most recently executed method.
-     * 
-     * @return True if the last operation completed successfully, false if it failed.
-     */
-    public boolean ok(){
-        return isOk;
+
+    public boolean ok() {
+        return this.isOk;
+    }
+
+    private int clipPosition(int pos, int max) {
+        if (pos < 1) return 1;
+        if (pos > max) return max;
+        return pos;
+    }
+
+    private void resetJackpotVisuals() {
+        this.marqueeLamp.changeColor("red");
+        this.screenBezel.changeColor("yellow");
+    }
+
+    private void notifyError(String message) {
+        this.isOk = false;
+        if (this.isVisible) {
+            JOptionPane.showMessageDialog(null, message, "SlotMachine - Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void pause(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

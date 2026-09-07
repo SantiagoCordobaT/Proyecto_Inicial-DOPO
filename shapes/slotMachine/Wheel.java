@@ -1,91 +1,88 @@
-import java.util.*;
+import java.util.ArrayList;
 
 /**
- * Represents a single spinning wheel within the slot machine simulator.
- * It manages its own collection of symbols, tracks which one is currently visible, 
- * and handles its own graphical representation on the screen.
- *
+ * Representa un carrete mecánico del simulador SlotMachine.
+ * Gestiona la secuencia circular de símbolos, su estado de fijación
+ * y una representación visual calibrada para las coordenadas de BlueJ.
+ * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 1.0
+ * @version 5.0 (Corrección de Parámetros BlueJ)
  */
-public class Wheel
-{
+public class Wheel {
     private ArrayList<String> symbols;
     private int currentVisibleIndex;
-    private Rectangle body;
-    private Circle symbolShape;
     private boolean isVisible;
-    
+    private boolean isLocked;
+
+    private Rectangle outerBezel;
+    private Rectangle innerReel;
+    private Circle symbolShape;
+
     /**
-     * Creates a new, empty wheel. 
+     * Construye un nuevo carrete alineando matemáticamente los componentes de BlueJ.
+     * Nace exactamente en la coordenada (0,0) relativa.
      */
-    public Wheel()
-    {
+    public Wheel() {
         this.symbols = new ArrayList<>();
         this.currentVisibleIndex = 0;
         this.isVisible = false;
-        
-        this.body = new Rectangle();
-        this.body.changeColor("magenta");
-        this.body.changeSize(200, 50);
-        
+        this.isLocked = false;
+
+        // 1. Marco exterior de la rueda (Blanco)
+        this.outerBezel = new Rectangle();
+        this.outerBezel.changeColor("white");
+        // ATENCIÓN BLUEJ: changeSize(alto, ancho) -> Alto: 90, Ancho: 50
+        this.outerBezel.changeSize(90, 50); 
+        this.outerBezel.moveHorizontal(-60); // Neutraliza a X = 0
+        this.outerBezel.moveVertical(-50);   // Neutraliza a Y = 0
+
+        // 2. Fondo oscuro del visor (Negro)
+        this.innerReel = new Rectangle();
+        this.innerReel.changeColor("black");
+        // changeSize(alto, ancho) -> Alto: 80, Ancho: 40
+        this.innerReel.changeSize(80, 40);
+        // Centrado: 5px de margen interno respecto al marco
+        this.innerReel.moveHorizontal(-60 + 5); 
+        this.innerReel.moveVertical(-50 + 5);   
+
+        // 3. Símbolo (Círculo)
         this.symbolShape = new Circle();
-        this.symbolShape.changeSize(30);
-        this.symbolShape.moveHorizontal(50);
-        this.symbolShape.moveVertical(75);
+        this.symbolShape.changeSize(30); // Diámetro 30
+        // Centrado matemático: X=10, Y=30 relativas al marco
+        this.symbolShape.moveHorizontal(-20 + 10); 
+        this.symbolShape.moveVertical(-60 + 30);   
     }
-    
-    /**
-     * Displays the wheel and active symbol on the screen.
-     */
-    public void makeVisible(){
-        this.body.makeVisible();
-        
-        if (!symbols.isEmpty()) {
+
+    public void makeVisible() {
+        this.outerBezel.makeVisible();
+        this.innerReel.makeVisible();
+        if (!this.symbols.isEmpty()) {
             this.symbolShape.makeVisible();
         }
-        
         this.isVisible = true;
     }
-    
-    /**
-     * Hides the wheel and active symbol from the screen.
-     */
-    public void makeInvisible(){
-        this.body.makeInvisible();
+
+    public void makeInvisible() {
+        this.outerBezel.makeInvisible();
+        this.innerReel.makeInvisible();
         this.symbolShape.makeInvisible();
         this.isVisible = false;
     }
-    
-    /**
-     * Moves both the wheel's casing and its symbol horizontally across the screen.
-     * 
-     * @param distance The exact number of pixels to move the wheel horizontally.
-     */
+
     public void moveHorizontal(int distance) {
-        this.body.moveHorizontal(distance);
+        this.outerBezel.moveHorizontal(distance);
+        this.innerReel.moveHorizontal(distance);
         this.symbolShape.moveHorizontal(distance);
     }
-    
-    /**
-     * Moves both the wheel's casing and its symbol vertically across the screen.
-     * 
-     * @param distance The exact number of pixels to move the wheel vertically.
-     */
+
     public void moveVertical(int distance) {
-        this.body.moveVertical(distance);
+        this.outerBezel.moveVertical(distance);
+        this.innerReel.moveVertical(distance);
         this.symbolShape.moveVertical(distance);
     }
-    
-    /**
-     * Adds a new symbol color to the wheel's sequence. 
-     * If it is the first symbol being added, it automatically displays it on the wheel.
-     * 
-     * @param color The exact name of the color to register as a symbol.
-     */
+
     public void place(String color) {
         this.symbols.add(color);
-    
         if (this.symbols.size() == 1) {
             this.symbolShape.changeColor(color);
             if (this.isVisible) {
@@ -93,42 +90,63 @@ public class Wheel
             }
         }
     }
-    
+
     /**
-     * Spins the wheel to reveal the next symbol in the sequence.
-     * If the wheel reaches the end of its symbol list, it seamlessly loops back to the beginning.
+     * Requisito 10: Fija la rueda impidiendo rotaciones y cambia su marco a rojo.
      */
-    public void spin() {
-        if (symbols.size() > 1) {
-            currentVisibleIndex = currentVisibleIndex + 1;
-    
-            if (currentVisibleIndex >= symbols.size()) {
-                currentVisibleIndex = 0;
-            }
-            
-            String newColor = symbols.get(currentVisibleIndex);
-            symbolShape.changeColor(newColor);
-        }
+    public void lock() {
+        this.isLocked = true;
+        this.outerBezel.changeColor("red"); // Alerta visual
     }
-    
+
     /**
-     * Retrieves the complete sequence of symbols configured on this specific wheel.
-     * 
-     * @return An ArrayList containing the color strings of the symbols.
+     * Requisito 10: Libera la rueda y restaura el color del bisel.
      */
+    public void unlock() {
+        this.isLocked = false;
+        this.outerBezel.changeColor("white"); // Restaura
+    }
+
+    public boolean isLocked() {
+        return this.isLocked;
+    }
+
+    public void spin() {
+        spinOneStep(1);
+    }
+
+    public void spinBackwards() {
+        spinOneStep(-1);
+    }
+
+    private void spinOneStep(int delta) {
+        if (this.isLocked || this.symbols.size() <= 1) {
+            return;
+        }
+        int total = this.symbols.size();
+        this.currentVisibleIndex = ((this.currentVisibleIndex + delta) % total + total) % total;
+        String newColor = this.symbols.get(this.currentVisibleIndex);
+        this.symbolShape.changeColor(newColor);
+    }
+
+    public boolean setVisibleSymbol(String color) {
+        int idx = this.symbols.indexOf(color);
+        if (idx != -1) {
+            this.currentVisibleIndex = idx;
+            this.symbolShape.changeColor(color);
+            return true;
+        }
+        return false;
+    }
+
     public ArrayList<String> getSymbols() {
         return this.symbols;
     }
-    
-    /**
-     * Identifies which symbol is currently being displayed on the wheel.
-     * 
-     * @return The color string of the visible symbol, or null if the wheel is empty.
-     */
+
     public String getVisibleSymbol() {
-        if (symbols.isEmpty()) {
+        if (this.symbols.isEmpty()) {
             return null;
         }
-        return symbols.get(currentVisibleIndex);
+        return this.symbols.get(this.currentVisibleIndex);
     }
 }
