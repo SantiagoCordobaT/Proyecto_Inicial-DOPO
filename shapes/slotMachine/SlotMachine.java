@@ -1,15 +1,11 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
- * Controlador principal del simulador de Maquina (Slot Machine).
+ * Controlador principal de la Maquina (Slot Machine).
  * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 2.0
+ * @version 3.0
  */
 public class SlotMachine {
     private boolean isOk;
@@ -18,17 +14,17 @@ public class SlotMachine {
     private ArrayList<Wheel> wheels;
     private ArrayList<String> allowedSymbols;
 
-    private Rectangle mainCabinet;
-    private Rectangle marqueeLamp;
-    private Rectangle screenBezel;
-    private Rectangle screenArea;
+    private Rectangle rectangExterior;
+    private Rectangle indicadorEstado;
+    private Rectangle adornoVictoria;
+    private Rectangle rectangInterior;
 
-    private final int WHEEL_SPACING = 65; 
-    private final int BASE_X = 55;        
-    private final int BASE_Y = 80;        
+    private final int ESPACIO_RUEDAS = 65; 
+    private final int INICIAL_X = 55;        
+    private final int INICIAL_Y = 80;        
 
     /**
-     * Inicializa la maquina y sus componentes visuales base.
+     * Inicializa la maquina y sus componentes base.
      */
     public SlotMachine() {
         this.wheels = new ArrayList<>();
@@ -37,39 +33,39 @@ public class SlotMachine {
         this.isVisible = false;
         this.isJackpotActive = false;
 
-        this.mainCabinet = new Rectangle();
-        this.mainCabinet.changeColor("blue");
-        this.mainCabinet.changeSize(220, 260); 
-        this.mainCabinet.moveHorizontal(-60 + 20);
-        this.mainCabinet.moveVertical(-50 + 20); 
+        this.rectangExterior = new Rectangle();
+        this.rectangExterior.changeColor("blue");
+        this.rectangExterior.changeSize(220, 260); 
+        this.rectangExterior.moveHorizontal(-60 + 20);
+        this.rectangExterior.moveVertical(-50 + 20); 
 
-        this.marqueeLamp = new Rectangle();
-        this.marqueeLamp.changeColor("red");
-        this.marqueeLamp.changeSize(15, 220); 
-        this.marqueeLamp.moveHorizontal(-60 + 40); 
-        this.marqueeLamp.moveVertical(-50 + 30);
+        this.indicadorEstado = new Rectangle();
+        this.indicadorEstado.changeColor("red");
+        this.indicadorEstado.changeSize(15, 220); 
+        this.indicadorEstado.moveHorizontal(-60 + 40);
+        this.indicadorEstado.moveVertical(-50 + 30);
 
-        this.screenBezel = new Rectangle();
-        this.screenBezel.changeColor("yellow");
-        this.screenBezel.changeSize(130, 240);
-        this.screenBezel.moveHorizontal(-60 + 30);
-        this.screenBezel.moveVertical(-50 + 60);
+        this.adornoVictoria = new Rectangle();
+        this.adornoVictoria.changeColor("yellow");
+        this.adornoVictoria.changeSize(130, 240);
+        this.adornoVictoria.moveHorizontal(-60 + 30);
+        this.adornoVictoria.moveVertical(-50 + 60);
 
-        this.screenArea = new Rectangle();
-        this.screenArea.changeColor("green");
-        this.screenArea.changeSize(110, 220);
-        this.screenArea.moveHorizontal(-60 + 40);
-        this.screenArea.moveVertical(-50 + 70);
+        this.rectangInterior = new Rectangle();
+        this.rectangInterior.changeColor("green");
+        this.rectangInterior.changeSize(110, 220);
+        this.rectangInterior.moveHorizontal(-60 + 40);
+        this.rectangInterior.moveVertical(-50 + 70);
     }
 
     /**
      * Muestra la maquina y sus ruedas en pantalla respetando el orden de capas.
      */
     public void makeVisible() {
-        this.mainCabinet.makeVisible();
-        this.marqueeLamp.makeVisible();
-        this.screenBezel.makeVisible();
-        this.screenArea.makeVisible();
+        this.rectangExterior.makeVisible();
+        this.indicadorEstado.makeVisible();
+        this.adornoVictoria.makeVisible();
+        this.rectangInterior.makeVisible();
         for (Wheel w : this.wheels) {
             w.makeVisible();
         }
@@ -81,10 +77,10 @@ public class SlotMachine {
      * Oculta la maquina y sus ruedas de la pantalla.
      */
     public void makeInvisible() {
-        this.mainCabinet.makeInvisible();
-        this.marqueeLamp.makeInvisible();
-        this.screenBezel.makeInvisible();
-        this.screenArea.makeInvisible();
+        this.rectangExterior.makeInvisible();
+        this.indicadorEstado.makeInvisible();
+        this.adornoVictoria.makeInvisible();
+        this.rectangInterior.makeInvisible();
         for (Wheel w : this.wheels) {
             w.makeInvisible();
         }
@@ -109,15 +105,15 @@ public class SlotMachine {
 
         Wheel newWheel = new Wheel();
         
-        int displacementX = BASE_X + ((targetPos - 1) * WHEEL_SPACING);
+        int displacementX = INICIAL_X + ((targetPos - 1) * ESPACIO_RUEDAS);
         newWheel.moveHorizontal(displacementX);
-        newWheel.moveVertical(BASE_Y);
+        newWheel.moveVertical(INICIAL_Y);
 
         for (int i = targetPos - 1; i < this.wheels.size(); i++) {
-            this.wheels.get(i).moveHorizontal(WHEEL_SPACING);
+            this.wheels.get(i).moveHorizontal(ESPACIO_RUEDAS);
         }
 
-        this.wheels.add(targetPos - 1, newWheel);
+        this.wheels.add(targetPos - 1, newWheel);   
         if (this.isVisible) {
             newWheel.makeVisible();
         }
@@ -139,7 +135,7 @@ public class SlotMachine {
         removed.makeInvisible();
 
         for (int i = targetPos - 1; i < this.wheels.size(); i++) {
-            this.wheels.get(i).moveHorizontal(-WHEEL_SPACING);
+            this.wheels.get(i).moveHorizontal(-ESPACIO_RUEDAS);
         }
         this.isOk = true;
     }
@@ -167,7 +163,7 @@ public class SlotMachine {
         Wheel obj1 = this.wheels.get(idx1);
         Wheel obj2 = this.wheels.get(idx2);
 
-        int pixelDistance = (idx2 - idx1) * WHEEL_SPACING;
+        int pixelDistance = (idx2 - idx1) * ESPACIO_RUEDAS;
         obj1.moveHorizontal(pixelDistance);
         obj2.moveHorizontal(-pixelDistance);
 
@@ -394,8 +390,8 @@ public class SlotMachine {
         boolean isWin = (matchCount == this.wheels.size());
 
         if (isWin) {
-            this.marqueeLamp.changeColor("yellow");
-            this.screenBezel.changeColor("green");
+            this.indicadorEstado.changeColor("yellow");
+            this.adornoVictoria.changeColor("green");
             this.isJackpotActive = true;
             fixZOrder();
         } else {
@@ -454,8 +450,8 @@ public class SlotMachine {
      */
     private void resetJackpotVisuals() {
         if (this.isJackpotActive) {
-            this.marqueeLamp.changeColor("red");
-            this.screenBezel.changeColor("yellow");
+            this.indicadorEstado.changeColor("red");
+            this.adornoVictoria.changeColor("yellow");
             this.isJackpotActive = false;
             fixZOrder();
         }
@@ -466,8 +462,8 @@ public class SlotMachine {
      */
     private void fixZOrder() {
         if (this.isVisible) {
-            this.screenArea.makeInvisible();
-            this.screenArea.makeVisible();
+            this.rectangInterior.makeInvisible();
+            this.rectangInterior.makeVisible();
             for (Wheel w : this.wheels) {
                 w.makeInvisible();
                 w.makeVisible();
