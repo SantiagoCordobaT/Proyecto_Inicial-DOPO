@@ -57,6 +57,30 @@ public class SlotMachine {
         this.rectangInterior.moveHorizontal(-60 + 40);
         this.rectangInterior.moveVertical(-50 + 70);
     }
+    
+    public SlotMachine(int n){
+        this();
+        if (n <= 0) n = 7;
+        this.allowedSymbols.clear();
+        String[] colores = {"red","black","blue","yellow","green","magenta","white"};
+        for (int i = 0; i < n; i++) {
+            if (i<colores.length) {
+                this.allowedSymbols.add(colores[i]);
+            } else {
+                this.allowedSymbols.add("color-" + (i + 1));
+            }
+        }
+        
+        Random aleatorios = new Random();
+        for (int i = 0; i < n; i++) {
+            this.addWheel();
+            for (int j = 0; j < this.allowedSymbols.size(); j++) {
+                this.addSymbol(i+1, this.allowedSymbols.get(j));
+            }
+            int giros = aleatorios.nextInt(n);
+            this.spin(i+1, giros);
+        }
+    }
 
     /**
      * Muestra la maquina y sus ruedas en pantalla respetando el orden de capas.

@@ -14,7 +14,7 @@ public class Wheel {
 
     private Rectangle outerBezel;          
     private Rectangle innerReel;           
-    private Circle symbolShape;            
+    private Circle symbolShape;           
 
     /**
      * Construye una nueva rueda en la coordenada (0,0).
