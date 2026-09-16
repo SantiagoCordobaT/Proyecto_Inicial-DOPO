@@ -2,108 +2,98 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Solucionador y simulador para el problema Slot Machine.
- * Basado en: https://www.youtube.com/watch?v=gYkF0kZ1bkE
+ * Contest solver and simulator for the Slot Machine problem.
  */
 public class SlotMachineContest {
 
-    // Almacena la secuencia de acciones (rueda, pasos) para que simulate() pueda reproducirlas
-    private List<int[]> actions;
+    private static boolean isVisible = false;
 
     /**
-     * Constructor de la clase SlotMachineContest.
-     */
-    public SlotMachineContest() {
-        this.actions = new ArrayList<>();
-    }
-
-    /**
-     * Resuelve el juego a ciegas tratando la maquina como un oraculo de caja negra.
-     * Debe permanecer invisible durante toda la ejecucion.
+     * Solves the slot machine and returns the sequence of winning moves.
      * 
-     * @param n Cantidad de ruedas y simbolos
-     * @return Cantidad total de acciones realizadas para ganar
+     * @param n Number of wheels and symbols
+     * @return Array of actions where each row is {wheel, steps}
      */
-    public int solve(int n) {
-        this.actions.clear();
+    public static int[][] solve(int n) {
+        List<int[]> actions = new ArrayList<>();
 
         SlotMachine machine = new SlotMachine(n);
-        machine.makeInvisible();
+        
+        if (isVisible) {
+            machine.makeVisible();
+        }
 
         if (machine.distinctSymbols() == 1) {
-            return 0;
+            return new int[0][0];
         }
 
-        // =========================================================================
-        // FASE 1: Obtener N símbolos distintos (distinctSymbols() == n)
-        // =========================================================================
-        // TODO: Deja la rueda 1 quieta. Recorre desde la rueda 2 hasta la n.
-        // Para cada rueda, pruébala rotándola paso a paso y déjala en la posición
-        // que maximice machine.distinctSymbols().
-        
-        
-        // =========================================================================
-        // FASE 2: Descubrir la posición/desfase relativo de cada rueda
-        // =========================================================================
-        // TODO: Con los n símbolos distintos, mueve la rueda 1 y prueba girar
-        // las demás ruedas de forma diferencial para identificar cuál rueda
-        // contiene cada símbolo respecto a la primera rueda.
-        int[] offset = new int[n + 1]; // Guarda cuántos pasos le faltan a cada rueda
-        
-        
-        // =========================================================================
-        // FASE 3: Alinear todas las ruedas al mismo símbolo (Jackpot)
-        // =========================================================================
-        // TODO: Aplica los giros calculados en offset[] para cada rueda (2 hasta n)
-        // para que coincidan con la rueda 1.
-        
+        for (int i = 2; i <= n; i++) {
+            if (machine.distinctSymbols() == n) {
+                break;
+            }
 
-        return this.actions.size();
+            int maxDistinct = machine.distinctSymbols();
+            int bestStep = 0;
+
+            for (int k = 1; k <= n; k++) {
+                machine.spin(i, 1);
+                actions.add(new int[]{i, 1});
+
+                int current = machine.distinctSymbols();
+                if (current > maxDistinct) {
+                    maxDistinct = current;
+                    bestStep = k;
+                }
+            }
+
+            if (bestStep > 0) {
+                machine.spin(i, bestStep);
+                actions.add(new int[]{i, bestStep});
+            }
+        }
+
+        boolean[] mark = new boolean[n + 1];
+        int[] wheelBySymbol = new int[n];
+
+        for (int s = 1; s <= n - 1; s++) {
+            machine.spin(1, 1);
+            actions.add(new int[]{1, 1});
+
+            for (int w = 2; w <= n; w++) {
+                if (!mark[w]) {
+                    machine.spin(w, n - 1);
+                    actions.add(new int[]{w, n - 1});
+
+                    if (machine.distinctSymbols() == n) {
+                        mark[w] = true;
+                        wheelBySymbol[s] = w;
+                        break;
+                    } else {
+                        machine.spin(w, 1);
+                        actions.add(new int[]{w, 1});
+                    }
+                }
+            }
+        }
+
+        for (int s = 1; s <= n - 1; s++) {
+            int w = wheelBySymbol[s];
+            int steps = n - s;
+            machine.spin(w, steps);
+            actions.add(new int[]{w, steps});
+        }
+
+        return actions.toArray(new int[actions.size()][2]);
     }
 
     /**
-     * Simula visualmente las acciones calculadas por solve(n) sobre una maquina visible.
+     * Simulates the solving process visually by executing solve in visible mode.
      * 
-     * @param n Cantidad de ruedas y simbolos
+     * @param n Number of wheels and symbols
      */
-    public void simulate(int n) {
-        // 1. Calcula las acciones resolviendo primero el problema
-        this.solve(n);
-
-        // 2. Crea la máquina para demostración visual
-        SlotMachine visualMachine = new SlotMachine(n);
-        visualMachine.makeVisible();
-        sleep(1000);
-
-        // 3. Reproduce paso a paso las acciones registradas
-        for (int[] action : this.actions) {
-            int wheel = action[0];
-            int steps = action[1];
-            visualMachine.spin(wheel, steps);
-            sleep(600); // Pausa para permitir la apreciación visual
-        }
-
-        if (visualMachine.isJackpot()) {
-            System.out.println("Jackpot!!!");
-        }
-    }
-
-    /**
-     * Metodo auxiliar para registrar y ejecutar un giro tanto en el oraculo.
-     */
-    private void recordAndSpin(SlotMachine machine, int wheel, int steps) {
-        machine.spin(wheel, steps);
-        this.actions.add(new int[]{wheel, steps});
-    }
-
-    /**
-     * Pausa auxiliar para la animacion visual en simulate.
-     */
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    public static void simulate(int n) {
+        isVisible = true;
+        solve(n);
+        isVisible = false;
     }
 }
