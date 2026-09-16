@@ -62,6 +62,7 @@ public class SlotMachine {
         this();
         if (n <= 0) n = 7;
         this.allowedSymbols.clear();
+        this.wheels.clear();
         String[] colores = {"red","black","blue","yellow","green","magenta","white"};
         for (int i = 0; i < n; i++) {
             if (i<colores.length) {
@@ -74,8 +75,8 @@ public class SlotMachine {
         Random aleatorios = new Random();
         for (int i = 0; i < n; i++) {
             this.addWheel();
-            for (int j = 0; j < this.allowedSymbols.size(); j++) {
-                this.addSymbol(i+1, this.allowedSymbols.get(j));
+            for (String simbolo : this.allowedSymbols) {
+                this.placeSymbol(i + 1, simbolo);
             }
             int giros = aleatorios.nextInt(n);
             this.spin(i+1, giros);
@@ -307,10 +308,6 @@ public class SlotMachine {
             } else {
                 target.spinBackwards();
             }
-
-            if (this.isVisible) {
-                pause(90);
-            }
         }
 
         resetJackpotVisuals();
@@ -368,12 +365,15 @@ public class SlotMachine {
     }
 
     /**
-     * Retorna la cantidad total de simbolos unicos en toda la maquina.
+     * Retorna la cantidad total de simbolos unicos actualmente visibles en la maquina.
      */
     public int distinctSymbols() {
         HashSet<String> distinct = new HashSet<>();
         for (Wheel w : this.wheels) {
-            distinct.addAll(w.getSymbols());
+            String visible = w.getVisibleSymbol();
+            if (visible != null) {
+                distinct.add(visible);
+            }
         }
         return distinct.size();
     }
@@ -502,17 +502,6 @@ public class SlotMachine {
         this.isOk = false;
         if (this.isVisible) {
             JOptionPane.showMessageDialog(null, message, "SlotMachine - Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    /**
-     * Pausa la ejecucion para animacion.
-     */
-    private void pause(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 }
