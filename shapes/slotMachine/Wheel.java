@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /**
- * Representa rueda de SlotMachine.
+ * Represents a slot machine wheel.
  * 
  * @author Santiago Cordoba - Camilo Rivas
  * @version 2.0
@@ -17,7 +17,7 @@ public class Wheel {
     private Circle symbolShape;           
 
     /**
-     * Construye una nueva rueda en la coordenada (0,0).
+     * Creates a new wheel at default position (0, 0).
      */
     public Wheel() {
         this.symbols = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Wheel {
     }
 
     /**
-     * Dibuja la rueda en pantalla respetando las capas.
+     * Makes the wheel and its components visible on screen.
      */
     public void makeVisible() {
         this.outerBezel.makeVisible();
@@ -56,7 +56,7 @@ public class Wheel {
     }
 
     /**
-     * Oculta la rueda de la pantalla.
+     * Hides the wheel from the screen.
      */
     public void makeInvisible() {
         this.outerBezel.makeInvisible();
@@ -66,7 +66,7 @@ public class Wheel {
     }
 
     /**
-     * Mueve la rueda horizontalmente.
+     * Moves the wheel horizontally by a given distance.
      */
     public void moveHorizontal(int distance) {
         this.outerBezel.moveHorizontal(distance);
@@ -75,7 +75,7 @@ public class Wheel {
     }
 
     /**
-     * Mueve la rueda verticalmente.
+     * Moves the wheel vertically by a given distance.
      */
     public void moveVertical(int distance) {
         this.outerBezel.moveVertical(distance);
@@ -84,7 +84,7 @@ public class Wheel {
     }
 
     /**
-     * Agrega un simbolo a la rueda y lo muestra si es el primero.
+     * Adds a symbol to the wheel and shows it if it is the first one.
      */
     public void place(String color) {
         this.symbols.add(color);
@@ -97,7 +97,7 @@ public class Wheel {
     }
 
     /**
-     * Fija la rueda impidiendo giros y marca en rojo.
+     * Locks the wheel to prevent spinning and turns the border red.
      */
     public void lock() {
         this.isLocked = true;
@@ -106,7 +106,7 @@ public class Wheel {
     }
 
     /**
-     * Libera la rueda y restaura color original.
+     * Unlocks the wheel and restores its normal border color.
      */
     public void unlock() {
         this.isLocked = false;
@@ -115,28 +115,28 @@ public class Wheel {
     }
 
     /**
-     * Devuelve true si la rueda esta bloqueada.
+     * Returns true if the wheel is locked.
      */
     public boolean isLocked() {
         return this.isLocked;
     }
 
     /**
-     * Rota la rueda un paso adelante.
+     * Spins the wheel one step forward.
      */
     public void spin() {
         spinOneStep(1);
     }
 
     /**
-     * Rota la rueda un paso atras.
+     * Spins the wheel one step backward.
      */
     public void spinBackwards() {
         spinOneStep(-1);
     }
 
     /**
-     * Calcula y muestra el siguiente simbolo.
+     * Advances the visible index by delta and updates the display.
      */
     private void spinOneStep(int delta) {
         if (this.isLocked || this.symbols.size() <= 1) {
@@ -149,7 +149,7 @@ public class Wheel {
     }
 
     /**
-     * Muestra un simbolo especifico forzando el giro.
+     * Forces the wheel to show a specific symbol if present.
      */
     public boolean setVisibleSymbol(String color) {
         int idx = this.symbols.indexOf(color);
@@ -162,14 +162,14 @@ public class Wheel {
     }
 
     /**
-     * Devuelve los simbolos de la rueda.
+     * Returns all symbols contained in this wheel.
      */
     public ArrayList<String> getSymbols() {
         return this.symbols;
     }
 
     /**
-     * Devuelve el simbolo visible actual.
+     * Returns the currently visible symbol, or null if empty.
      */
     public String getVisibleSymbol() {
         if (this.symbols.isEmpty()) {
@@ -179,7 +179,7 @@ public class Wheel {
     }
 
     /**
-     * Restaura el orden visual tras un cambio de color.
+     * Restores the proper shape layering on canvas.
      */
     private void fixZOrder() {
         if (this.isVisible) {

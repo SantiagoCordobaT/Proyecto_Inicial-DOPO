@@ -2,7 +2,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
- * Controlador principal de la Maquina (Slot Machine).
+ * Main controler (Slot Machine).
  * 
  * @author Santiago Cordoba - Camilo Rivas
  * @version 3.0
@@ -24,7 +24,7 @@ public class SlotMachine {
     private final int INICIAL_Y = 80;        
 
     /**
-     * Inicializa la maquina y sus componentes base.
+     * Starts the machine.
      */
     public SlotMachine() {
         this.wheels = new ArrayList<>();
@@ -58,6 +58,9 @@ public class SlotMachine {
         this.rectangInterior.moveVertical(-50 + 70);
     }
     
+    /**
+     *  Start the machine with n symbols and wheels.
+     */
     public SlotMachine(int n){
         this();
         if (n <= 0) n = 7;
@@ -84,7 +87,7 @@ public class SlotMachine {
     }
 
     /**
-     * Muestra la maquina y sus ruedas en pantalla respetando el orden de capas.
+     * Make visible the machine in the canvas.
      */
     public void makeVisible() {
         this.rectangExterior.makeVisible();
@@ -99,7 +102,7 @@ public class SlotMachine {
     }
 
     /**
-     * Oculta la maquina y sus ruedas de la pantalla.
+     * Hide the machine in the canvas.
      */
     public void makeInvisible() {
         this.rectangExterior.makeInvisible();
@@ -114,14 +117,14 @@ public class SlotMachine {
     }
 
     /**
-     * Añade una nueva rueda al final de la maquina.
+     * Adds a new wheel next to the last wheel.
      */
     public boolean addWheel() {
         return addWheel(this.wheels.size() + 1);
     }
 
     /**
-     * Añade una nueva rueda en una posicion especifica.
+     * Adds a new wheel at specific position.
      */
     public boolean addWheel(int pos) {
         int targetPos = pos;
@@ -147,7 +150,7 @@ public class SlotMachine {
     }
 
     /**
-     * Elimina la rueda de la posicion indicada.
+     * Delet a wheel in a specific position.
      */
     public void delWheel(int pos) {
         if (this.wheels.isEmpty()) {
@@ -166,7 +169,7 @@ public class SlotMachine {
     }
 
     /**
-     * Intercambia la posicion de dos ruedas.
+     * Interchange one wheel with other wheel (by position of those wheels).
      */
     public void swap(int wheel1, int wheel2) {
         if (this.wheels.size() < 2) {
@@ -197,7 +200,7 @@ public class SlotMachine {
     }
 
     /**
-     * Bloquea una rueda para que no gire.
+     * locks a wheel (user cant spin it)
      */
     public void lock(int wheel) {
         if (this.wheels.isEmpty()) {
@@ -210,7 +213,7 @@ public class SlotMachine {
     }
 
     /**
-     * Desbloquea una rueda previamente fijada.
+     * unlock a wheel (a locked wheel turn to unlock, so the user can spin it).
      */
     public void unlock(int wheel) {
         if (this.wheels.isEmpty()) {
@@ -223,7 +226,7 @@ public class SlotMachine {
     }
 
     /**
-     * Registra un simbolo nuevo en la lista permitida.
+     * Register a symbol at a specific position with a specific color.
      */
     public void addSymbol(int pos, String color) {
         if (color == null || color.trim().isEmpty()) {
@@ -241,7 +244,7 @@ public class SlotMachine {
     }
 
     /**
-     * Elimina un simbolo de la lista permitida.
+     * Delets a symbol that is in the allowed symbols list.
      */
     public void delSymbol(String symbol) {
         boolean wasRemoved = this.allowedSymbols.remove(symbol);
@@ -253,7 +256,7 @@ public class SlotMachine {
     }
 
     /**
-     * Asigna un simbolo valido a una rueda.
+     * Assigns a allowed symbol to the list (it can be visual in the canvas).
      */
     public void placeSymbol(int wheel, String symbol) {
         if (this.wheels.isEmpty()) {
@@ -271,14 +274,14 @@ public class SlotMachine {
     }
 
     /**
-     * Gira una rueda un paso hacia adelante.
+     * Spins a wheel with the same method in the class.
      */
     public void spin(int wheel) {
         spin(wheel, 1);
     }
 
     /**
-     * Gira una rueda multiples pasos con animacion visible.
+     * Spins a wheel (change the color(symbol) at specific position and with specific steps(count of changes))
      */
     public void spin(int wheel, int steps) {
         if (this.wheels.isEmpty()) {
@@ -315,7 +318,7 @@ public class SlotMachine {
     }
 
     /**
-     * Asigna una configuracion especifica de simbolos a todas las ruedas.
+     * Assigns a specific configuration to the machine (specific symbols)
      */
     public void spin(String[] setSymbols) {
         if (setSymbols == null || setSymbols.length != this.wheels.size()) {
@@ -340,7 +343,7 @@ public class SlotMachine {
     }
 
     /**
-     * Gira un paso todas las ruedas no bloqueadas.
+     * spins one step all the wheels that are unlock.
      */
     public void spin() {
         if (this.wheels.isEmpty()) {
@@ -357,7 +360,7 @@ public class SlotMachine {
     }
 
     /**
-     * Retorna los simbolos presentes en la primera rueda.
+     * Returns the symbols in the first wheels (unique symbols).
      */
     public String[] symbols() {
         if (this.wheels.isEmpty()) return new String[0];
@@ -365,7 +368,7 @@ public class SlotMachine {
     }
 
     /**
-     * Retorna la cantidad total de simbolos unicos actualmente visibles en la maquina.
+     * Returns the numbers of unique symbols in the machine (all wheels).
      */
     public int distinctSymbols() {
         HashSet<String> distinct = new HashSet<>();
@@ -379,7 +382,7 @@ public class SlotMachine {
     }
 
     /**
-     * Retorna la combinacion de simbolos visibles actualmente.
+     * Returns the visible configuration of symbols.
      */
     public String[] configuration() {
         String[] config = new String[this.wheels.size()];
@@ -390,7 +393,7 @@ public class SlotMachine {
     }
 
     /**
-     * Verifica si todas las ruedas muestran el mismo simbolo.
+     * Verify if all of the wheels have the same symbols (WIN CONDITION)
      */
     public boolean isJackpot() {
         if (this.wheels.isEmpty()) {
@@ -427,7 +430,7 @@ public class SlotMachine {
     }
 
     /**
-     * Convierte los simbolos visibles actuales a indices numericos.
+     * Converts the visible symbols to a numeric index.
      */
     public int[] getNumericConfiguration() {
         int[] numConfig = new int[this.wheels.size()];
@@ -446,7 +449,7 @@ public class SlotMachine {
     }
 
     /**
-     * Oculta el simulador y termina la sesion visual.
+     * Hide de simulator and end the operation.
      */
     public void exit() {
         makeInvisible();
@@ -454,14 +457,14 @@ public class SlotMachine {
     }
 
     /**
-     * Retorna true si la ultima operacion fue exitosa.
+     * Returns true if the operation was succesfully.
      */
     public boolean ok() {
         return this.isOk;
     }
 
     /**
-     * Asegura que una posicion este dentro de los limites validos.
+     * Verify that a position is valid.
      */
     private int clipPosition(int pos, int max) {
         if (pos < 1) return 1;
@@ -470,7 +473,7 @@ public class SlotMachine {
     }
 
     /**
-     * Restaura los colores normales y previene que tapen a las ruedas (Z-Index fix).
+     * Restore the normal symbols and implements fixZOrder
      */
     private void resetJackpotVisuals() {
         if (this.isJackpotActive) {
@@ -482,7 +485,7 @@ public class SlotMachine {
     }
 
     /**
-     * Restaura el orden de las capas de BlueJ tras un cambio de color.
+     * Restore the order of the caps.
      */
     private void fixZOrder() {
         if (this.isVisible) {
@@ -496,7 +499,7 @@ public class SlotMachine {
     }
 
     /**
-     * Fija isOk en falso y muestra alerta si esta visible.
+     * Is something went wrong make isOk false and show a message with JOptionPane.
      */
     private void notifyError(String message) {
         this.isOk = false;
