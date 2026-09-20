@@ -140,7 +140,7 @@ public class SlotMachine {
         for (int i = targetPos - 1; i < this.wheels.size(); i++) {
             this.wheels.get(i).moveHorizontal(ESPACIO_RUEDAS);
         }
-
+        
         this.wheels.add(targetPos - 1, newWheel);   
         if (this.isVisible) {
             newWheel.makeVisible();
@@ -150,7 +150,7 @@ public class SlotMachine {
     }
 
     /**
-     * Delet a wheel in a specific position.
+     * Delete a wheel in a specific position.
      */
     public void delWheel(int pos) {
         if (this.wheels.isEmpty()) {
@@ -449,7 +449,7 @@ public class SlotMachine {
     }
 
     /**
-     * Hide de simulator and end the operation.
+     * Hide the simulator and end the operation.
      */
     public void exit() {
         makeInvisible();
@@ -473,7 +473,7 @@ public class SlotMachine {
     }
 
     /**
-     * Restore the normal symbols and implements fixZOrder
+     * Restore the normal symbols and implements fixZOrder.
      */
     private void resetJackpotVisuals() {
         if (this.isJackpotActive) {

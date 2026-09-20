@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Represents a slot machine wheel.
  * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 2.0
+ * @version 3.0
  */
 public class Wheel {
     private ArrayList<String> symbols;     
@@ -97,7 +97,7 @@ public class Wheel {
     }
 
     /**
-     * Locks the wheel to prevent spinning and turns the border red.
+     * Locks the wheel (it cant move) and turns the border red.
      */
     public void lock() {
         this.isLocked = true;
@@ -106,7 +106,7 @@ public class Wheel {
     }
 
     /**
-     * Unlocks the wheel and restores its normal border color.
+     * Unlocks the wheel and restores color.
      */
     public void unlock() {
         this.isLocked = false;
