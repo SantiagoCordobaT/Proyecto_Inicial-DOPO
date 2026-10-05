@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
  * Main controler (Slot Machine).
  * 
  * @author Santiago Cordoba - Camilo Rivas
- * @version 3.0
+ * @version 4.0
  */
 public class SlotMachine {
     private boolean isOk;
@@ -19,9 +19,11 @@ public class SlotMachine {
     private Rectangle adornoVictoria;
     private Rectangle rectangInterior;
 
-    private final int ESPACIO_RUEDAS = 65; 
-    private final int INICIAL_X = 55;        
-    private final int INICIAL_Y = 80;        
+    private int dinamicWidth;
+    private final int WHEEL_SPACE = 65;
+    private final int INIT_X = 55;
+    private final int INIT_Y = 80;
+    private final int statHeight = 350;
 
     /**
      * Starts the machine.
@@ -56,6 +58,18 @@ public class SlotMachine {
         this.rectangInterior.changeSize(110, 220);
         this.rectangInterior.moveHorizontal(-60 + 40);
         this.rectangInterior.moveVertical(-50 + 70);
+        
+    }
+    
+    private void dinamicCanvas() {
+        int nWheels = wheels.size();
+        int dinamicWidth = INIT_X + (nWheels * WHEEL_SPACE) + 100;
+        Canvas.getCanvas().resizeCanvas(dinamicWidth, statHeight);
+        int anchoRectangulos = (nWheels * WHEEL_SPACE) + 40;
+        this.rectangExterior.changeSize(220, anchoRectangulos + 40);
+        this.indicadorEstado.changeSize(15, anchoRectangulos + 20);
+        this.adornoVictoria.changeSize(130, anchoRectangulos + 20);
+        this.rectangInterior.changeSize(110, anchoRectangulos);
     }
     
     /**
@@ -84,8 +98,10 @@ public class SlotMachine {
             int giros = aleatorios.nextInt(n);
             this.spin(i+1, giros);
         }
+        
+        dinamicCanvas();
     }
-
+    
     /**
      * Make visible the machine in the canvas.
      */
@@ -133,18 +149,20 @@ public class SlotMachine {
 
         Wheel newWheel = new Wheel();
         
-        int displacementX = INICIAL_X + ((targetPos - 1) * ESPACIO_RUEDAS);
+        int displacementX = INIT_X + ((targetPos - 1) * WHEEL_SPACE);
         newWheel.moveHorizontal(displacementX);
-        newWheel.moveVertical(INICIAL_Y);
+        newWheel.moveVertical(INIT_Y);
 
         for (int i = targetPos - 1; i < this.wheels.size(); i++) {
-            this.wheels.get(i).moveHorizontal(ESPACIO_RUEDAS);
+            this.wheels.get(i).moveHorizontal(WHEEL_SPACE);
         }
         
         this.wheels.add(targetPos - 1, newWheel);   
         if (this.isVisible) {
             newWheel.makeVisible();
         }
+        
+        this.dinamicCanvas();
         this.isOk = true;
         return true;
     }
@@ -163,8 +181,10 @@ public class SlotMachine {
         removed.makeInvisible();
 
         for (int i = targetPos - 1; i < this.wheels.size(); i++) {
-            this.wheels.get(i).moveHorizontal(-ESPACIO_RUEDAS);
+            this.wheels.get(i).moveHorizontal(-WHEEL_SPACE);
         }
+        
+        this.dinamicCanvas();
         this.isOk = true;
     }
 
@@ -191,7 +211,7 @@ public class SlotMachine {
         Wheel obj1 = this.wheels.get(idx1);
         Wheel obj2 = this.wheels.get(idx2);
 
-        int pixelDistance = (idx2 - idx1) * ESPACIO_RUEDAS;
+        int pixelDistance = (idx2 - idx1) * WHEEL_SPACE;
         obj1.moveHorizontal(pixelDistance);
         obj2.moveHorizontal(-pixelDistance);
 
@@ -314,6 +334,7 @@ public class SlotMachine {
         }
 
         resetJackpotVisuals();
+        updateJackpotIndicator();
         this.isOk = true;
     }
 
@@ -393,42 +414,47 @@ public class SlotMachine {
     }
 
     /**
-     * Verify if all of the wheels have the same symbols (WIN CONDITION)
+     * Checks if the slot machine has hit the jackpot.
+     * A jackpot occurs when all wheels display matching symbols or configuration.
+     * @return true if all wheels match, false otherwise.
      */
-    public boolean isJackpot() {
-        if (this.wheels.isEmpty()) {
-            notifyError("No hay ruedas para evaluar.");
+    public boolean isjackpot() {
+        if (this.wheels == null || this.wheels.isEmpty()) {
             return false;
         }
-
-        int[] numericConfig = getNumericConfiguration();
-        int targetId = numericConfig[0];
-
-        if (targetId == -1) {
-            notifyError("Ruedas sin simbolos definidos.");
+        
+        String[] config = this.configuration();
+        if (config == null || config.length == 0) {
             return false;
         }
-
-        int matchCount = 0;
-        for (int id : numericConfig) {
-            if (id == targetId) matchCount++;
+        
+        String firstSymbol = config[0];
+        for (String symbol : config) {
+            if (symbol == null || !symbol.equals(firstSymbol)) {
+                return false;
+            }
         }
-
-        boolean isWin = (matchCount == this.wheels.size());
-
-        if (isWin) {
-            this.indicadorEstado.changeColor("yellow");
-            this.adornoVictoria.changeColor("green");
-            this.isJackpotActive = true;
-            fixZOrder();
-        } else {
-            resetJackpotVisuals();
-        }
-
-        this.isOk = true;
-        return isWin;
+        
+        return true;
     }
-
+    
+    /**
+     * Updates the visual state of the jackpot indicator based on the current machine state.
+     */
+    private void updateJackpotIndicator() {
+        if (this.isjackpot()) {
+            this.isJackpotActive = true;
+            if (this.indicadorEstado != null) {
+                this.indicadorEstado.changeColor("green");
+            }
+        } else {
+            this.isJackpotActive = false;
+            if (this.indicadorEstado != null) {
+                this.indicadorEstado.changeColor("red");
+            }
+        }
+    }
+    
     /**
      * Converts the visible symbols to a numeric index.
      */
