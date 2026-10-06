@@ -95,11 +95,17 @@ public class Canvas{
             graphic.setColor(Color.magenta);
         else if(colorString.equals("white"))
             graphic.setColor(Color.white);
+        else if(colorString.equals("gray"))
+            graphic.setColor(Color.gray);
+        else if(colorString.equals("orange"))
+            graphic.setColor(Color.orange);
+        else if(colorString.equals("cyan"))
+            graphic.setColor(Color.cyan);
         else if(colorString.startsWith("color-")) {
             try {
                 String numberStr = colorString.substring(6);
                 int index = Integer.parseInt(numberStr);
-                float hue = (index % 10) / 10f;
+                float hue = (float) ((index * 0.61803398875) % 1.0);
                 graphic.setColor(Color.getHSBColor(hue, 0.85f, 0.9f));
             } catch (Exception e) {
                 graphic.setColor(Color.black);
