@@ -16,7 +16,6 @@ public class ShySymbol extends Symbol {
         super(color);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getType() {
         return "shy";
@@ -28,7 +27,6 @@ public class ShySymbol extends Symbol {
         setVisible(!isVisible());
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBadgeColor() {
         return "cyan";

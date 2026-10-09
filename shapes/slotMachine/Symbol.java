@@ -1,6 +1,5 @@
 /**
  * Base class of every symbol that can be placed on a {@link Wheel}.
- * <p>
  * A symbol has a color, a size, a visibility state and three life-cycle hooks
  * that a {@link Wheel} invokes: {@link #onSpin()} on every step the wheel turns,
  * {@link #onSelected()} when the symbol becomes the one shown by the wheel and
@@ -12,7 +11,6 @@
  * @version 4.0
  */
 public abstract class Symbol {
-    /** Diameter, in pixels, of a symbol that has not been modified. */
     public static final int DEFAULT_SIZE = 30;
 
     private final String color;
@@ -35,7 +33,7 @@ public abstract class Symbol {
     }
 
     /**
-     * Returns the name of the symbol type (for example "normal" or "shy").
+     * Returns the name of the symbol type.
      *
      * @return type name, in lower case
      */
@@ -63,7 +61,7 @@ public abstract class Symbol {
     }
 
     /**
-     * Color of the small marker drawn under the symbol so that its type can be
+     * Color of the marker drawn under the symbol so that its type can be
      * recognized at first sight. A normal symbol has no marker.
      *
      * @return the marker color, or null if the symbol has no marker

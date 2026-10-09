@@ -13,31 +13,26 @@ public class RebelWheel extends Wheel {
         super();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getType() {
         return "rebel";
     }
 
-    /** {@inheritDoc} */
     @Override
     protected String getBezelColor() {
         return "orange";
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canLock() {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canSwap() {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean canBeDeleted() {
         return false;

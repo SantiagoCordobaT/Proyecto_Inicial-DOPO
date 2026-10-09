@@ -17,7 +17,7 @@ public class SlotMachineC2Test {
     }
 
     // ==========================================
-    // PRUEBAS QUE PASAN EXITOSAMENTE
+    // PRUEBAS QUE PASAN
     // ==========================================
 
     @Test
@@ -565,13 +565,12 @@ public class SlotMachineC2Test {
 
 
     // ==========================================
-    // PRUEBAS COMUNITARIAS QUE NO PASAN (CON EXPLICACIÓN TÉCNICA)
+    // PRUEBAS QUE NO PASAN 
     // ==========================================
 
     /*
     // EXPLICACIÓN: Esta prueba asume que intentar intercambiar (`swap`) una rueda bloqueada 
-    // debe fallar obligatoriamente (`ok() == false`). Nuestra arquitectura permite el intercambio 
-    // bajo validaciones de factoría y control interno, difiriendo de esta restricción estricta comunitaria.
+    // debe fallar obligatoriamente (`ok() == false`). Nuestra arquitectura permite el intercambio.
     @Test
     public void accordingMurShouldSwapLockedWheelsAndMaintainLockState() {
         machine.addWheel(1);
@@ -591,7 +590,7 @@ public class SlotMachineC2Test {
 
     /*
     // EXPLICACIÓN: Esta prueba asume que el método `swap` deniega la operación si alguna rueda 
-    // está fija. Nuestra arquitectura prioriza el diseño modular del estado de bloqueo de forma independiente.
+    // está fija.
     @Test
     public void accordingIcPgShouldNotSwap() {
         machine.addSymbol(1, "red");
@@ -637,7 +636,7 @@ public class SlotMachineC2Test {
     */
 
     /*
-    // EXPLICACIÓN: Comprueba el estado de bloqueo mediante formato de String plano, difiriendo 
+    // EXPLICACIÓN: Comprueba el estado de bloqueo mediante formato de String, difiriendo 
     // del manejo tipado por arreglos de nuestra arquitectura.
     @Test
     public void accordingBBRLShouldNotSpinWhenLocked() {
@@ -757,7 +756,7 @@ public class SlotMachineC2Test {
 
     /*
     // EXPLICACIÓN: Esta prueba evalúa el reporte de configuración con índices detallados que no 
-    // coinciden con el orden secuencial estricto que maneja nuestra API de consulta por lotes.
+    // coinciden con el orden secuencial que maneja por lotes.
     @Test
     public void accordingFmSnShouldShowCorrectConfiguration() {
         machine.addWheel(1);
@@ -793,7 +792,7 @@ public class SlotMachineC2Test {
 
     /*
     // EXPLICACIÓN: Esta prueba evalúa el cálculo estricto de símbolos distintos bajo un supuesto 
-    // de conteo de nulos que nuestra estructura de datos compacta omite por diseño.
+    // de conteo de nulos que nuestra estructura de datos omite por diseño.
     @Test
     public void accordingCcIcshouldCalculateDistinctSymbolsCorrectly() {
         machine.addWheel(1);
@@ -828,8 +827,7 @@ public class SlotMachineC2Test {
 
     /*
     // EXPLICACIÓN: Esta prueba (`accordingCcIcshouldNotExceedMaximumWheelsLimit`) asume que existe 
-    // un límite duro de 9 ruedas máximo en la máquina. Nuestra implementación soporta escalabilidad dinámica 
-    // acoplada al canvas sin un límite máximo estático arbitrario.
+    // un límite duro de 9 ruedas máximo en la máquina. Nuestra implementación soporta escalabilidad dinámica.
     @Test
     public void accordingCcIcshouldNotExceedMaximumWheelsLimit() {
         for (int i = 1; i <= 10; i++) {
@@ -858,7 +856,7 @@ public class SlotMachineC2Test {
 
     /*
     // EXPLICACIÓN: Esta prueba (`accordingMsRhShouldNotChangeLockedWheelWhenSpinning`) valida el bloqueo 
-    // bajo una secuencia de inicialización de símbolos compartidos que difiere del aislamiento estricto 
+    // bajo una secuencia de inicialización de símbolos compartidos que difiere del aislamiento 
     // por rueda que maneja nuestra máquina.
     @Test
     public void accordingMsRhShouldNotChangeLockedWheelWhenSpinning() {

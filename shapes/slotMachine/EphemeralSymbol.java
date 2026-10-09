@@ -5,9 +5,8 @@
  * @version 4.0
  */
 public class EphemeralSymbol extends Symbol {
-    /** Pixels lost on each spin. */
+    
     public static final int STEP = 5;
-    /** Smallest size: the symbol is then drawn as a dot. */
     public static final int MIN_SIZE = 3;
 
     /**
@@ -19,19 +18,17 @@ public class EphemeralSymbol extends Symbol {
         super(color);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getType() {
         return "ephemeral";
     }
 
-    /** Decrements the size, never going below {@link #MIN_SIZE}. */
+    /** Decrements the size. */
     @Override
     public void onSpin() {
         setSize(Math.max(MIN_SIZE, getSize() - STEP));
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBadgeColor() {
         return "orange";

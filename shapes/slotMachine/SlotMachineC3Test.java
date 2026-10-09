@@ -18,10 +18,6 @@ public class SlotMachineC3Test {
         n = 3;
     }
 
-    // ==========================================
-    // PRUEBAS QUE PASAN EXITOSAMENTE
-    // ==========================================
-
     @Test
     public void accordingIcPgShouldStayUnderActionLimit() {
         int[][] actions = SlotMachineContest.solve(50);
@@ -141,7 +137,7 @@ public class SlotMachineC3Test {
 
 
     // ==========================================
-    // PRUEBAS COMUNITARIAS QUE NO PASAN (CON EXPLICACIÓN)
+    // PRUEBAS COMUNITARIAS QUE NO PASAN 
     // ==========================================
 
     /*
@@ -158,8 +154,7 @@ public class SlotMachineC3Test {
 
     /*
     // EXPLICACIÓN: Esta prueba asume que solve() retorna una List<int[]> y que se puede consultar 
-    // getMachine(). Nuestro diseño implementa solve() retornando un arreglo primitivo bidimensional (int[][]), 
-    // estándar y eficiente para este tipo de algoritmos de optimización.
+    // getMachine(). Nuestro diseño implementa solve() retornando un arreglo primitivo bidimensional (int[][]).
     @Test
     public void shouldSolveAMachineWithOneWheelListReturn() {
         List<int[]> actions = SlotMachineContest.solve(1);
@@ -171,7 +166,7 @@ public class SlotMachineC3Test {
     /*
     // EXPLICACIÓN: Esta prueba asume que una máquina recién creada con SlotMachine(3) mantiene 
     // todas sus ruedas alineadas en "red". No pasa porque nuestro constructor inicializa las posiciones 
-    // de manera aleatoria mediante Random, cumpliendo con el comportamiento de una máquina real.
+    // de manera aleatoria mediante Random.
     @Test
     public void accordingCcGbShouldtestAllWheelsHaveSameSymbolOrder() {
         SlotMachine machine = new SlotMachine(3);
@@ -184,8 +179,7 @@ public class SlotMachineC3Test {
 
     /*
     // EXPLICACIÓN: Esta prueba espera que sm.symbols() retorne todos los símbolos acumulados de todas 
-    // las ruedas (N * N, es decir, 25 para N=5). En nuestra arquitectura, symbols() representa el contrato 
-    // que retorna la tira de símbolos de la primera rueda, por lo que su tamaño es N.
+    // las ruedas.
     @Test
     public void accordingCjMcShouldCreateEqualWheelsAndSymbolsPerWheel() {
         SlotMachine sm = new SlotMachine(5);

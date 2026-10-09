@@ -21,10 +21,6 @@ public class SlotMachineC4Test {
         slotMachine.exit();
     }
 
-    // ==========================================
-    // PRUEBAS QUE PASAN EXITOSAMENTE
-    // ==========================================
-
     @Test
     public void shouldAddSymbolsOfEveryType() {
         slotMachine.addWheel("normal", 1);
@@ -112,13 +108,13 @@ public class SlotMachineC4Test {
 
 
     // ==========================================
-    // PRUEBAS COMUNITARIAS QUE NO PASAN (CON EXPLICACIÓN TÉCNICA)
+    // PRUEBAS COMUNITARIAS QUE NO PASAN
     // ==========================================
 
     /*
     // EXPLICACIÓN: Esta prueba asume que el método `spinMachineWithEveryWheelAndSymbolType` 
-    // invoca `addSymbol` sin especificar el tipo de factoría o con una firma abreviada que no 
-    // coincide con la sobrecarga robusta de nuestra implementación (`addSymbol(type, pos, color)`).
+    // invoca `addSymbol` sin especificar el tipo o con una firma abreviada que no 
+    // coincide con la sobrecarga de nuestra implementación (`addSymbol(type, pos, color)`).
     @Test
     public void shouldSpinMachineWithEveryWheelAndSymbolType() {
         slotMachine.addSymbol("normal", 1, "red");
@@ -152,7 +148,7 @@ public class SlotMachineC4Test {
 
     /*
     // EXPLICACIÓN: Esta prueba asume que la clase `Wheel` expone métodos de bajo nivel 
-    // ajenos a la API pública del controlador (como `addSymbolWheel()`, `rotateOnce()`, `getSymbol()`). 
+    // ajenos al     controlador (como `addSymbolWheel()`, `rotateOnce()`, `getSymbol()`). 
     // Nuestra arquitectura encapsula estas operaciones a través de los métodos de alto nivel de `SlotMachine`.
     @Test
     public void accordingCcIcshouldShrinkEphemeralWhenItReachesTheWindow() {

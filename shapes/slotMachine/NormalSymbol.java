@@ -14,8 +14,7 @@ public class NormalSymbol extends Symbol {
     public NormalSymbol(String color) {
         super(color);
     }
-
-    /** {@inheritDoc} */
+    
     @Override
     public String getType() {
         return "normal";

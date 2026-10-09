@@ -15,19 +15,16 @@ public class LeftyWheel extends Wheel {
         super();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getType() {
         return "lefty";
     }
 
-    /** {@inheritDoc} */
     @Override
     protected String getBezelColor() {
         return "cyan";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void spin(Wheel left) {
         if (!copy(left)) {
@@ -35,7 +32,6 @@ public class LeftyWheel extends Wheel {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void spinBackwards(Wheel left) {
         if (!copy(left)) {

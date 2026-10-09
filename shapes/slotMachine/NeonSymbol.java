@@ -1,5 +1,5 @@
 /**
- * New symbol type proposed by the team (requirement 19): it glows while it is
+ * New symbol type proposed by the team: it glows while it is
  * the symbol shown by its wheel and turns off as soon as the wheel moves on.
  *
  * @author Santiago Cordoba - Camilo Rivas
@@ -18,7 +18,6 @@ public class NeonSymbol extends Symbol {
         this.glowing = false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getType() {
         return "neon";
@@ -36,13 +35,11 @@ public class NeonSymbol extends Symbol {
         this.glowing = false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isGlowing() {
         return this.glowing;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getBadgeColor() {
         return "white";

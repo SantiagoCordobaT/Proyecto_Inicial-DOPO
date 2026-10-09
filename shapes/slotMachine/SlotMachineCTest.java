@@ -14,10 +14,6 @@ public class SlotMachineCTest {
         machine = new SlotMachine();
     }
 
-    // ==========================================
-    // PRUEBAS - GRUPO: GomezCarrero
-    // ==========================================
-
     /**
      * Verifies insertion at the first position.
      */
@@ -38,11 +34,7 @@ public class SlotMachineCTest {
         assertEquals(1, machine.wheelCount());
         assertTrue(machine.ok());
     }
-
-    // ==========================================
-    // PRUEBAS - GRUPO 4: BUSTOS-ZORRO
-    // ==========================================
-
+    
     /**
      * An existing symbol should be removed from the machine.
      */
@@ -63,10 +55,6 @@ public class SlotMachineCTest {
         machine.delSymbol("green");
         assertFalse(machine.ok());
     }
-
-    // ==========================================
-    // PRUEBAS - GRUPO: GualdronL-VillagranR (G06) [Adaptadas]
-    // ==========================================
 
     @Test
     public void accordingGlVrshouldCreateSlotMachine() {

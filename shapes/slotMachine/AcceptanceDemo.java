@@ -1,11 +1,7 @@
 /**
- * Two acceptance scenarios ready for the presentation. Run {@link #main}
- * with the machine visible; each scenario shows one requirement of cycle 4.
- * <ul>
- * <li>Scenario 1 - wheel types: lefty copies its left neighbor and rebel
- *     refuses to be locked, swapped or deleted.</li>
- * <li>Scenario 2 - symbol types: ephemeral shrinks, shy toggles, neon glows.</li>
- * </ul>
+ * Run with the machine visible; each scenario shows one requirement.
+ * Scenario 1 - wheel types: lefty copies its left neighbor and rebel refuses to be locked, swapped or deleted.</li>
+ * Scenario 2 - symbol types: ephemeral shrinks, shy toggles, neon glows.</li>
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
