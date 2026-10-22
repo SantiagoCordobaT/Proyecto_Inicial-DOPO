@@ -1,12 +1,6 @@
 /**
- * Base class of every symbol that can be placed on a {@link Wheel}.
- * A symbol has a color, a size, a visibility state and three life-cycle hooks
- * that a {@link Wheel} invokes: {@link #onSpin()} on every step the wheel turns,
- * {@link #onSelected()} when the symbol becomes the one shown by the wheel and
- * {@link #onDeselected()} when it stops being the shown one. Each subclass
- * decides what to do in those hooks, so new symbol types do not require any
- * change in {@link Wheel} or {@link SlotMachine}.
- *
+ * Base class of every symbol.
+ * 
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
  */
@@ -118,7 +112,7 @@ public abstract class Symbol {
     /**
      * Changes the size of the symbol.
      *
-     * @param size the new diameter in pixels (never negative)
+     * @param size the new diameter in pixels
      */
     protected void setSize(int size) {
         this.size = Math.max(0, size);

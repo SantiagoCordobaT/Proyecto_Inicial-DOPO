@@ -3,14 +3,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a slot machine wheel (the normal one). Subclasses change its
- * behavior by overriding {@link #canLock()}, {@link #canSwap()},
- * {@link #canBeDeleted()}, {@link #spin(Wheel)} and {@link #getBezelColor()}.
- * <p>
- * The wheel holds {@link Symbol} objects and drives their life cycle: every
- * step it turns it calls {@link Symbol#onSpin()} on all of them,
- * {@link Symbol#onDeselected()} on the one that leaves and
- * {@link Symbol#onSelected()} on the one that arrives.
+ * Represents a slot machine wheel.
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
