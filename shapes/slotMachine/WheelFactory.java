@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 /**
  * Creates wheels from their type name. New wheel types are made available with
- * {@link #register(String, Supplier)}.
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0

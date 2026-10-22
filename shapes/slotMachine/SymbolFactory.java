@@ -3,9 +3,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Creates symbols from their type name. New symbol types are made available
- * with {@link #register(String, Function)}, so {@link SlotMachine} never has
- * to be edited when a type is added.
+ * Creates symbols from their type name.
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0

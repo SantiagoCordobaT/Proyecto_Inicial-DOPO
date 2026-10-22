@@ -7,12 +7,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 /**
- * Main controller (Slot Machine). It works only with {@link Wheel} and
- * {@link Symbol}; the concrete types are created by {@link WheelFactory} and
- * {@link SymbolFactory}, so new types do not require changes here.
- * <p>
- * Every operation sets {@link #ok()}: true if it was carried out, false if it
- * was rejected (a message is shown when the machine is visible).
+ * Main controller (Slot Machine).
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
