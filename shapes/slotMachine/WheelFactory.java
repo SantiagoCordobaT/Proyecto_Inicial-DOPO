@@ -12,7 +12,7 @@ public final class WheelFactory {
     private static final Map<String, Supplier<Wheel>> CREATORS = new LinkedHashMap<>();
 
     static {
-        register("normal", Wheel::new);
+        register("normal", NormalWheel::new);
         register("lefty", LeftyWheel::new);
         register("rebel", RebelWheel::new);
     }

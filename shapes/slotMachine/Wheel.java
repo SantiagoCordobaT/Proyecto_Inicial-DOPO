@@ -8,7 +8,7 @@ import java.util.List;
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
  */
-public class Wheel {
+public abstract class Wheel {
     private final List<Symbol> symbols;
     private int currentVisibleIndex;
     private boolean isVisible;
@@ -60,14 +60,12 @@ public class Wheel {
         this.badge.moveVertical(25);
     }
 
-    /**
+        /**
      * Name of the wheel type.
      *
-     * @return "normal" for this class; subclasses return their own name
+     * @return type name in lower case
      */
-    public String getType() {
-        return "normal";
-    }
+    public abstract String getType();
 
     /**
      * Color of the border while the wheel is not locked. It identifies the
@@ -75,9 +73,7 @@ public class Wheel {
      *
      * @return color name
      */
-    protected String getBezelColor() {
-        return "white";
-    }
+    protected abstract String getBezelColor();
 
     /**
      * Tells whether this wheel accepts to be locked.
