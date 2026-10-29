@@ -550,16 +550,6 @@ public class SlotMachine {
     }
 
     /**
-     * Returns the wheel at a position (for tests of the same package).
-     *
-     * @param pos position, starting at 1
-     * @return the wheel
-     */
-    Wheel wheelAt(int pos) {
-        return this.wheels.get(pos - 1);
-    }
-
-    /**
      * Returns the number of wheels (for tests of the same package).
      *
      * @return number of wheels
