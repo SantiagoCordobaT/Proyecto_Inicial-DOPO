@@ -34,6 +34,14 @@ public abstract class Symbol {
     public abstract String getType();
 
     /**
+     * Creates a new symbol of this type with the given color.
+     *
+     * @param color color name of the symbol
+     * @return a new symbol
+     */
+    public abstract Symbol createNew(String color);
+
+    /**
      * Called every time the wheel that owns this symbol turns one step.
      * By default it does nothing.
      */

@@ -22,4 +22,9 @@ public class NormalWheel extends Wheel {
     protected String getBezelColor() {
         return "white";
     }
+
+    @Override
+    public Wheel createNew() {
+        return new NormalWheel();
+    }
 }

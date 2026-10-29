@@ -19,4 +19,9 @@ public class NormalSymbol extends Symbol {
     public String getType() {
         return "normal";
     }
+
+    @Override
+    public Symbol createNew(String color) {
+        return new NormalSymbol(color);
+    }
 }

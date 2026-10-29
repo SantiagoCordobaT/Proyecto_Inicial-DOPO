@@ -21,6 +21,11 @@ public class ShySymbol extends Symbol {
         return "shy";
     }
 
+    @Override
+    public Symbol createNew(String color) {
+        return new ShySymbol(color);
+    }
+
     /** Toggles the visibility. */
     @Override
     public void onSelected() {

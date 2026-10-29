@@ -1,6 +1,5 @@
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Creates symbols from their type name.
@@ -9,13 +8,13 @@ import java.util.function.Function;
  * @version 4.0
  */
 public final class SymbolFactory {
-    private static final Map<String, Function<String, Symbol>> CREATORS = new LinkedHashMap<>();
+    private static final Map<String, Symbol> PROTOTYPES = new LinkedHashMap<>();
 
     static {
-        register("normal", NormalSymbol::new);
-        register("ephemeral", EphemeralSymbol::new);
-        register("shy", ShySymbol::new);
-        register("neon", NeonSymbol::new);
+        register("normal", new NormalSymbol("white"));
+        register("ephemeral", new EphemeralSymbol("white"));
+        register("shy", new ShySymbol("white"));
+        register("neon", new NeonSymbol("white"));
     }
 
     private SymbolFactory() {
@@ -24,11 +23,11 @@ public final class SymbolFactory {
     /**
      * Registers (or replaces) a symbol type.
      *
-     * @param type    name of the type
-     * @param creator function that builds a symbol from its color
+     * @param type      name of the type
+     * @param prototype base symbol of that type
      */
-    public static void register(String type, Function<String, Symbol> creator) {
-        CREATORS.put(type.toLowerCase(), creator);
+    public static void register(String type, Symbol prototype) {
+        PROTOTYPES.put(type.toLowerCase(), prototype);
     }
 
     /**
@@ -38,7 +37,7 @@ public final class SymbolFactory {
      * @return true if it is registered
      */
     public static boolean isRegistered(String type) {
-        return type != null && CREATORS.containsKey(type.toLowerCase());
+        return type != null && PROTOTYPES.containsKey(type.toLowerCase());
     }
 
     /**
@@ -53,6 +52,6 @@ public final class SymbolFactory {
         if (!isRegistered(type)) {
             throw new IllegalArgumentException("Tipo de simbolo desconocido: " + type);
         }
-        return CREATORS.get(type.toLowerCase()).apply(color);
+        return PROTOTYPES.get(type.toLowerCase()).createNew(color);
     }
 }

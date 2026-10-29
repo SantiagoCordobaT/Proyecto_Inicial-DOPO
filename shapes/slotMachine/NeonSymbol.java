@@ -23,6 +23,11 @@ public class NeonSymbol extends Symbol {
         return "neon";
     }
 
+    @Override
+    public Symbol createNew(String color) {
+        return new NeonSymbol(color);
+    }
+
     /** Turns the glow on. */
     @Override
     public void onSelected() {

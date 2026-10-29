@@ -24,6 +24,11 @@ public class RebelWheel extends Wheel {
     }
 
     @Override
+    public Wheel createNew() {
+        return new RebelWheel();
+    }
+
+    @Override
     public boolean canLock() {
         return false;
     }

@@ -23,6 +23,11 @@ public class EphemeralSymbol extends Symbol {
         return "ephemeral";
     }
 
+    @Override
+    public Symbol createNew(String color) {
+        return new EphemeralSymbol(color);
+    }
+
     /** Decrements the size. */
     @Override
     public void onSpin() {

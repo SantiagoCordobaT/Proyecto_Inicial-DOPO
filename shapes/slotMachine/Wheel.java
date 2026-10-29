@@ -68,6 +68,13 @@ public abstract class Wheel {
     public abstract String getType();
 
     /**
+     * Creates a new wheel of this type.
+     *
+     * @return a new wheel
+     */
+    public abstract Wheel createNew();
+
+    /**
      * Color of the border while the wheel is not locked. It identifies the
      * type of wheel on the screen.
      *

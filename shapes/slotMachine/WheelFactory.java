@@ -1,20 +1,19 @@
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
- * Creates wheels from their type name. New wheel types are made available with
+ * Creates wheels from their type name.
  *
  * @author Santiago Cordoba - Camilo Rivas
  * @version 4.0
  */
 public final class WheelFactory {
-    private static final Map<String, Supplier<Wheel>> CREATORS = new LinkedHashMap<>();
+    private static final Map<String, Wheel> PROTOTYPES = new LinkedHashMap<>();
 
     static {
-        register("normal", NormalWheel::new);
-        register("lefty", LeftyWheel::new);
-        register("rebel", RebelWheel::new);
+        register("normal", new NormalWheel());
+        register("lefty", new LeftyWheel());
+        register("rebel", new RebelWheel());
     }
 
     private WheelFactory() {
@@ -23,11 +22,11 @@ public final class WheelFactory {
     /**
      * Registers (or replaces) a wheel type.
      *
-     * @param type    name of the type
-     * @param creator function that builds the wheel
+     * @param type      name of the type
+     * @param prototype base wheel of that type
      */
-    public static void register(String type, Supplier<Wheel> creator) {
-        CREATORS.put(type.toLowerCase(), creator);
+    public static void register(String type, Wheel prototype) {
+        PROTOTYPES.put(type.toLowerCase(), prototype);
     }
 
     /**
@@ -37,7 +36,7 @@ public final class WheelFactory {
      * @return true if it is registered
      */
     public static boolean isRegistered(String type) {
-        return type != null && CREATORS.containsKey(type.toLowerCase());
+        return type != null && PROTOTYPES.containsKey(type.toLowerCase());
     }
 
     /**
@@ -51,6 +50,6 @@ public final class WheelFactory {
         if (!isRegistered(type)) {
             throw new IllegalArgumentException("Tipo de rueda desconocido: " + type);
         }
-        return CREATORS.get(type.toLowerCase()).get();
+        return PROTOTYPES.get(type.toLowerCase()).createNew();
     }
 }

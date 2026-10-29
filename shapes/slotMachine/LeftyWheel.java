@@ -26,6 +26,11 @@ public class LeftyWheel extends Wheel {
     }
 
     @Override
+    public Wheel createNew() {
+        return new LeftyWheel();
+    }
+
+    @Override
     public void spin(Wheel left) {
         if (!copy(left)) {
             super.spin(left);
